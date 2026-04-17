@@ -2,359 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>占い師専用ソフト</title>
-
-<style>
-body{
-font-family:sans-serif;
-background:#0e0b1c;
-color:#fff;
-padding:20px;
-}
-
-.box{
-max-width:800px;
-margin:auto;
-background:#1b1330;
-padding:20px;
-border-radius:20px;
-}
-
-h1{
-text-align:center;
-color:#f3d77f;
-}
-
-input,select,textarea{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-}
-
-button{
-width:100%;
-padding:15px;
-margin-top:15px;
-border:none;
-border-radius:10px;
-background:#d4af37;
-font-weight:bold;
-}
-
-.result{
-margin-top:20px;
-white-space:pre-wrap;
-line-height:1.8;
-}
-
-.card{
-background:#2a1f4d;
-padding:15px;
-border-radius:15px;
-margin-top:15px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="box">
-<h1>占い師専用ソフト</h1>
-
-<input id="name" placeholder="名前">
-<input type="date" id="birth">
-<textarea id="question" placeholder="相談内容"></textarea>
-
-<button onclick="uranai(function getDaiun(monthStem, monthBranch, yearStem, gender, birthYear){
-
-const stems = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
-const branches = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
-
-let isYang = ["甲","丙","戊","庚","壬"].includes(yearStem);
-
-let forward = true;
-
-if(gender=="男性"){
-forward = isYang;
-}else if(gender=="女性"){
-forward = !isYang;
-}
-
-let stemIndex = stems.indexOf(monthStem);
-let branchIndex = branches.indexOf(monthBranch);
-
-let daiun = [];
-
-let startAge = 8; // 簡易
-
-for(let i=0;i<8;i++){
-
-if(forward){
-stemIndex = (stemIndex+1)%10;
-branchIndex = (branchIndex+1)%12;
-}else{
-stemIndex = (stemIndex-1+10)%10;
-branchIndex = (branchIndex-1+12)%12;
-}
-
-daiun.push({
-age:startAge + i*10,
-pillar:stems[stemIndex]+branches[branchIndex],
-year:(birthYear + startAge + i*10)
-});
-}
-
-return daiun;
-})">鑑定する</button>
-
-<div id="result" class="result"></div>
-</div>
-
-<script>function getYearPillarFull(year){
-let index = year - 1984;
-return stems[index%10] + branches[index%12];
-}
-
-const stems = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
-const branches = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
-
-function getPillar(year){
-let index = year - 1984;
-return stems[index%10] + branches[index%12];
-}
-
-function uranai(function uranai(function tsuhen(dayStem, targetStem){
-
-const el = {
-"甲":"木","乙":"木","丙":"火","丁":"火",
-"戊":"土","己":"土","庚":"金","辛":"金",
-"壬":"水","癸":"水"
-};
-
-const yinYang = {
-"甲":1,"乙":0,"丙":1,"丁":0,
-"戊":1,"己":0,"庚":1,"辛":0,
-"壬":1,"癸":0
-};
-
-function produce(a,b){
-return (
-(a=="木"&&b=="火")||
-(a=="火"&&b=="土")||
-(a=="土"&&b=="金")||
-(a=="金"&&b=="水")||
-(a=="水"&&b=="木")
-);
-}
-
-function control(a,b){
-return (
-(a=="木"&&b=="土")||
-(a=="土"&&b=="水")||
-(a=="水"&&b=="火")||
-(a=="火"&&b=="金")||
-(a=="金"&&b=="木")
-);
-}
-
-let a = el[dayStem];
-let b = el[targetStem];
-
-let same = yinYang[dayStem] == yinYang[targetStem];
-
-if(a==b) return same?"比肩":"劫財";
-if(produce(a,b)) return same?"食神":"傷官";
-if(control(a,b)) return same?"偏財":"正財";
-if(control(b,a)) return same?"偏官":"正官";
-if(produce(b,a)) return same?"偏印":"印綬";
-
-return "";
-}
-
-function juniun(dayStem,branch){
-
-const table = {
-"甲":["亥長生","子沐浴","丑冠帯","寅建禄","卯帝旺","辰衰","巳病","午死","未墓","申絶","酉胎","戌養"],
-"乙":["午長生","巳沐浴","辰冠帯","卯建禄","寅帝旺","丑衰","子病","亥死","戌墓","酉絶","申胎","未養"],
-"丙":["寅長生","卯沐浴","辰冠帯","巳建禄","午帝旺","未衰","申病","酉死","戌墓","亥絶","子胎","丑養"],
-"丁":["酉長生","申沐浴","未冠帯","午建禄","巳帝旺","辰衰","卯病","寅死","丑墓","子絶","亥胎","戌養"],
-"戊":["寅長生","卯沐浴","辰冠帯","巳建禄","午帝旺","未衰","申病","酉死","戌墓","亥絶","子胎","丑養"],
-"己":["酉長生","申沐浴","未冠帯","午建禄","巳帝旺","辰衰","卯病","寅死","丑墓","子絶","亥胎","戌養"],
-"庚":["巳長生","午沐浴","未冠帯","申建禄","酉帝旺","戌衰","亥病","子死","丑墓","寅絶","卯胎","辰養"],
-"辛":["子長生","亥沐浴","戌冠帯","酉建禄","申帝旺","未衰","午病","巳死","辰墓","卯絶","寅胎","丑養"],
-"壬":["申長生","酉沐浴","戌冠帯","亥建禄","子帝旺","丑衰","寅病","卯死","辰墓","巳絶","午胎","未養"],
-"癸":["卯長生","寅沐浴","丑冠帯","子建禄","亥帝旺","戌衰","酉病","申死","未墓","午絶","巳胎","辰養"]
-};
-
-let list = table[dayStem];
-let found = list.find(v=>v.startsWith(branch));
-return found || "";
-}){
-
-let name = document.getElementById("name").value;
-let birth = document.getElementById("birth").value;
-let q = document.getElementById("question").value;
-
-if(!name || !birth){
-alert("入力して下さい");
-return;
-}
-
-let [y,m,d] = birth.split("-").map(Number);
-
-let yearP = getPillar(y);
-let yearStem = yearP[0];
-
-let monthP = getMonthPillar(yearStem,m);
-let dayP = getDayPillar(y,m,d);
-let dayStem = dayP[0];
-
-let hour = 12;
-let hourP = getHourPillar(dayStem,hour);
-
-let element = getElement(dayStem);
-
-let result = `
-【命式】
-年柱：${yearP}
-月柱：${monthP}
-日柱：${dayP}
-時柱：${hourP}
-
-日主：${dayStem}（${element}）
-
-【鑑定】
-${name}様は${element}の性質を中心に人生が構成されています。
-
-${element==="木"?"成長・発展":"火"?"情熱":"土"?"安定":"金"?"決断":"知性"}の力が強い方です。
-
-【相談】
-${q}
-
-【答え】
-今は無理に動くより整える時です。
-`;
-
-document.getElementById("result").innerText = result;
-}){function getMonthPillar(yearStem, month){
-const map = {
-"甲":"丙","己":"丙",
-"乙":"戊","庚":"戊",
-"丙":"庚","辛":"庚",
-"丁":"壬","壬":"壬",
-"戊":"甲","癸":"甲"
-};
-
-let start = map[yearStem];
-let startIndex = stems.indexOf(start);
-
-return stems[(startIndex + month - 1)%10] + branches[(month+1)%12];
-}
-
-function getDayPillar(year,month,day){
-let base = new Date(1900,0,1);
-let target = new Date(year,month-1,day);
-let diff = Math.floor((target-base)/86400000);
-return stems[diff%10] + branches[diff%12];
-}
-
-function getHourPillar(dayStem,hour){
-let index = Math.floor((hour+1)/2)%12;
-let startMap={
-"甲":"甲","己":"甲",
-"乙":"丙","庚":"丙",
-"丙":"戊","辛":"戊",
-"丁":"庚","壬":"庚",
-"戊":"壬","癸":"壬"
-};
-
-let start = startMap[dayStem];
-let sIndex = stems.indexOf(start);
-
-return stems[(sIndex+index)%10] + branches[index];
-}
-
-function getElement(stem){
-return {
-"甲":"木","乙":"木",
-"丙":"火","丁":"火",
-"戊":"土","己":"土",
-"庚":"金","辛":"金",
-"壬":"水","癸":"水"
-}[stem];
-}
-let name = document.getElementById("name").value;
-let birth = document.getElementById("birth").value;
-let q = document.getElementById("question").value;
-
-if(!name || !birth){
-alert("入力して下さい");
-return;
-}let result = `
-【命式】
-年柱：${yearP}（${tsYear}）
-月柱：${monthP}（${tsMonth}）
-日柱：${dayP}
-時柱：${hourP}（${tsHour}）
-
-【十二運】
-年：${juYear}
-月：${juMonth}
-日：${juDay}
-時：${juHour}
-
-日主：${dayStem}（${element}）
-
-【鑑定】
-${name}様は${element}を中心とした命式を持ち、
-通変星と十二運から見ると内面の成熟型の運勢です。
-
-【相談】
-${q}
-
-【答え】
-流れを読むことで運は大きく変わります。
-`;
-
-let y = Number(birth.split("-")[0]);
-
-let pillar = getPillar(y);
-let tsYear = tsuhen(dayStem, yearP[0]);
-let tsMonth = tsuhen(dayStem, monthP[0]);
-let tsHour = tsuhen(dayStem, hourP[0]);
-
-let juYear = juniun(dayStem, yearP[1]);
-let juMonth = juniun(dayStem, monthP[1]);
-let juDay = juniun(dayStem, dayP[1]);
-let juHour = juniun(dayStem, hourP[1]);
-let result = `
-【命式】
-年柱：${pillar}
-
-【鑑定】
-${name}様は内面に強い意思を持ちながら
-外側では柔らかく振る舞う方です。
-
-今は焦らず流れを整える時期です。
-
-【相談】
-${q}
-
-【答え】
-今は動くより整えることが重要です。
-`;
-
-document.getElementById("result").innerText = result;
-
-}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>占い師専用ソフト 完成版</title>
 
 <style>
 body{font-family:sans-serif;background:#0e0b1c;color:#fff;padding:20px;}
@@ -362,7 +10,7 @@ body{font-family:sans-serif;background:#0e0b1c;color:#fff;padding:20px;}
 h1{text-align:center;color:#f3d77f;}
 input,textarea{width:100%;padding:10px;margin-top:10px;border-radius:10px;border:none;}
 button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:10px;background:#d4af37;font-weight:bold;}
-.result{margin-top:20px;white-space:pre-wrap;line-height:1.8;}
+.result{margin-top:20px;white-space:pre-wrap;}
 </style>
 </head>
 
@@ -374,138 +22,61 @@ button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:10px;ba
 <input id="name" placeholder="名前">
 <input type="date" id="birth">
 
-<input id="name2" placeholder="相手（相性用）">
-<input type="date" id="birth2">
-
 <textarea id="question" placeholder="相談内容"></textarea>
 
 <button onclick="uranai()">鑑定する</button>
-<button onclick="copyText()">鑑定書コピー</button>
 
 <div id="result" class="result"></div>
+
+<a href="https://www.instagram.com/moahetonghuishe" target="_blank">
+鑑定はこちら（Instagram）
+</a>
+
 </div>
 
 <script>
 
-// ===== 基本 =====
 const stems=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
 const branches=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
-function yP(y){let i=y-1984;return stems[i%10]+branches[i%12];}
-function mP(s,m){let map={"甲":"丙","己":"丙","乙":"戊","庚":"戊","丙":"庚","辛":"庚","丁":"壬","壬":"壬","戊":"甲","癸":"甲"};let i=stems.indexOf(map[s]);return stems[(i+m-1)%10]+branches[(m+1)%12];}
-function dP(y,m,d){let base=new Date(1900,0,1);let t=new Date(y,m-1,d);let diff=Math.floor((t-base)/86400000);return stems[diff%10]+branches[diff%12];}
-function hP(s,h){let idx=Math.floor((h+1)/2)%12;let map={"甲":"甲","己":"甲","乙":"丙","庚":"丙","丙":"戊","辛":"戊","丁":"庚","壬":"庚","戊":"壬","癸":"壬"};let i=stems.indexOf(map[s]);return stems[(i+idx)%10]+branches[idx];}
-
-function el(s){return {"甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水"}[s];}
-
-// ===== 通変星 =====
-function ts(d,t){
-const e={"甲":"木","乙":"木","丙":"火","丁":"火","戊":"土","己":"土","庚":"金","辛":"金","壬":"水","癸":"水"};
-const yy={"甲":1,"乙":0,"丙":1,"丁":0,"戊":1,"己":0,"庚":1,"辛":0,"壬":1,"癸":0};
-function p(a,b){return(a=="木"&&b=="火")||(a=="火"&&b=="土")||(a=="土"&&b=="金")||(a=="金"&&b=="水")||(a=="水"&&b=="木");}
-function c(a,b){return(a=="木"&&b=="土")||(a=="土"&&b=="水")||(a=="水"&&b=="火")||(a=="火"&&b=="金")||(a=="金"&&b=="木");}
-let a=e[d],b=e[t],same=yy[d]==yy[t];
-if(a==b)return same?"比肩":"劫財";
-if(p(a,b))return same?"食神":"傷官";
-if(c(a,b))return same?"偏財":"正財";
-if(c(b,a))return same?"偏官":"正官";
-if(p(b,a))return same?"偏印":"印綬";
+function getYear(y){
+let i=y-1984;
+return stems[i%10]+branches[i%12];
 }
 
-// ===== 十二運 =====
-function ju(d,b){
-const t={"甲":["亥長生","子沐浴","丑冠帯","寅建禄","卯帝旺","辰衰","巳病","午死","未墓","申絶","酉胎","戌養"]};
-return (t[d]||[]).find(v=>v.startsWith(b))||"";
-}
-
-// ===== 大運 =====
-function dai(ms,mb,y){
-let si=stems.indexOf(ms),bi=branches.indexOf(mb),r=[];
-for(let i=0;i<6;i++){si=(si+1)%10;bi=(bi+1)%12;r.push((i*10+8)+"歳："+stems[si]+branches[bi]);}
-return r.join("\n");
-}
-
-// ===== 流月 =====
-function getsMonth(){
-return ["1月:運気調整","2月:準備","3月:動き出す","4月:変化","5月:成長","6月:安定","7月:注意","8月:チャンス","9月:整理","10月:結果","11月:見直し","12月:総括"].join("\n");
-}
-
-// ===== 相性 =====
-function aisho(e1,e2){
-if(e1==e2)return "非常に相性が良い";
-return "学び合う相性";
-}
-
-// ===== メイン =====
 function uranai(){
 
-let n=name.value;
-let b=birth.value;
-let n2=name2.value;
-let b2=birth2.value;
-let q=question.value;
+let name=document.getElementById("name").value;
+let birth=document.getElementById("birth").value;
+let q=document.getElementById("question").value;
 
-if(!n||!b){alert("入力");return;}
-
-let [y,m,d]=b.split("-").map(Number);
-
-let Y=yP(y),M=mP(Y[0],m),D=dP(y,m,d),H=hP(D[0],12);
-let e=el(D[0]);
-
-let ai="";
-if(n2&&b2){
-let y2=Number(b2.split("-")[0]);
-let e2=el(dP(y2,1,1)[0]);
-ai=aisho(e,e2);
+if(!name||!birth){
+alert("入力してください");
+return;
 }
+
+let y=Number(birth.split("-")[0]);
+
+let year=getYear(y);
 
 let result=`
 【命式】
-年：${Y}（${ts(D[0],Y[0])}）
-月：${M}（${ts(D[0],M[0])}）
-日：${D}
-時：${H}
-
-【十二運】
-年：${ju(D[0],Y[1])}
-月：${ju(D[0],M[1])}
-
-日主：${D[0]}（${e}）
-
-【大運】
-${dai(M[0],M[1],y)}
-
-【流年】
-${new Date().getFullYear()}：${yP(new Date().getFullYear())}
-
-【流月】
-${getsMonth()}
-
-【相性】
-${ai}
+年柱：${year}
 
 【鑑定】
-${n}様は${e}の性質を中心に運が動きます。
+${name}様は強い芯を持つ方です。
 
 【相談】
 ${q}
 
 【答え】
-流れを整えることで運命は変わります。
+今は焦らず整える時です。
 `;
 
 document.getElementById("result").innerText=result;
 }
 
-// コピー
-function copyText(){
-navigator.clipboard.writeText(result.innerText);
-alert("コピーしました");
-}
-
-</script><a href="https://www.instagram.com/moahetonghuishe" target="_blank">
-鑑定はこちら（Instagram）
-</a>
+</script>
 
 </body>
 </html>
