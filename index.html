@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>生命線リーディングPro 入力画面版</title>
+  <style>
+    :root {
+      --bg: #f7f1ea;
+      --card: #ffffff;
+      --line: #eadccd;
+      --text: #3f342c;
+      --sub: #7a6b62;
+      --accent: #c68853;
+      --accent-soft: #fff3e8;
+      --danger: #b42318;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Hiragino Sans", "Yu Gothic", sans-serif;
+      background: linear-gradient(180deg, #fbf7f2 0%, var(--bg) 100%);
+      color: var(--text);
+    }
+    .app {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px 14px 40px;
+    }
+    .hero, .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+    }
+    .hero {
+      background: linear-gradient(180deg, #fff3e8 0%, #fffaf5 100%);
+      padding: 22px 18px;
+      margin-bottom: 14px;
+    }
+    .brand {
+      font-size: 12px;
+      color: var(--sub);
+      margin-bottom: 6px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      line-height: 1.35;
+    }
+    .lead {
+      margin: 0;
+      color: var(--sub);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .card {
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+    h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+    }
+    .muted {
+      color: var(--sub);
+      font-size: 13px;
+    }
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      color: var(--sub);
+      font-size: 13px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      font-size: 16px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fff;
+    }
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+    .chip.active {
+      background: var(--accent-soft);
+      border-color: #e1c9b4;
+    }
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    button {
+      min-height: 48px;
+      border: none;
+      border-radius: 14px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .error {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fff1f1;
+      color: var(--danger);
+      font-size: 14px;
+      border: 1px solid #f1cccc;
+    }
+    .preview {
+      background: #fffaf5;
+      border: 1px dashed #e3cfbc;
+      border-radius: 16px;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .preview-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .result {
+      display: none;
+    }
+    .section {
+      background: #fffaf5;
+      border: 1px solid #f0e4d7;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .section h3 {
+      margin: 0 0 6px;
+      font-size: 17px;
+    }
+    @media (max-width: 640px) {
+      .grid-2, .quick-grid, .button-row {
+        grid-template-columns: 1fr;
+      }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="hero">
+      <div class="brand">占い師専用｜生命線リーディングPro＋易＋九星気学</div>
+      <h1>入力画面版</h1>
+      <p class="lead">スマホで素早く入力して、そのまま鑑定結果を出せる軽量版です。まずは生年月日とテーマを入れて、必要な時だけ詳細を追加する作りにしています。</p>
+    </div>
+
+    <div class="card">
+      <h2>基本入力</h2>
+      <p class="muted">生年月日は 19671127 の8桁で入力してください。</p>
+
+      <label>お客様名</label>
+      <input id="clientName" placeholder="例：山田 花子" />
+
+      <div class="grid-2">
+        <div>
+          <label>生年月日</label>
+          <input id="birth" placeholder="例：19671127" />
+        </div>
+        <div>
+          <label>性別</label>
+          <select id="gender">
+            <option value="未設定">未設定</option>
+            <option value="女性">女性</option>
+            <option value="男性">男性</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+      </div>
+
+      <label>相談テーマ</label>
+      <select id="theme">
+        <option value="総合">総合</option>
+        <option value="恋愛">恋愛</option>
+        <option value="復縁">復縁</option>
+        <option value="仕事">仕事</option>
+        <option value="金運">金運</option>
+        <option value="人間関係">人間関係</option>
+        <option value="引越し">引越し</option>
+        <option value="人生の流れ">人生の流れ</option>
+      </select>
+
+      <div class="preview">
+        <div class="preview-title">よく使うテーマ</div>
+        <div class="quick-grid">
+          <button type="button" class="chip" onclick="setTheme('総合', this)">総合鑑定</button>
+          <button type="button" class="chip" onclick="setTheme('恋愛', this)">恋愛</button>
+          <button type="button" class="chip" onclick="setTheme('復縁', this)">復縁</button>
+          <button type="button" class="chip" onclick="setTheme('引越し', this)">引越し時期・方角</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>詳細入力</h2>
+      <label>相談内容</label>
+      <textarea id="consultation" placeholder="例：今の仕事を続けるべきか迷っている / 引越しの時期と方角を知りたい"></textarea>
+
+      <label>今の悩み</label>
+      <textarea id="worry" placeholder="例：考えすぎて動けない / 恋愛で同じパターンを繰り返す"></textarea>
+
+      <label>相手の生年月日（任意）</label>
+      <input id="partnerBirth" placeholder="例：19880512" />
+
+      <div class="grid-2">
+        <div>
+          <label>引越し希望時期</label>
+          <input id="moveTiming" placeholder="例：3か月以内 / 秋ごろ" />
+        </div>
+        <div>
+          <label>気になる方角</label>
+          <input id="moveDirection" placeholder="例：東南 / 北西" />
+        </div>
+      </div>
+
+      <label>占い師メモ</label>
+      <textarea id="readerNote" placeholder="最後に入れたいひとことや補足"></textarea>
+
+      <div class="button-row">
+        <button onclick="generateInputVersion()">結果を出す</button>
+        <button class="secondary" onclick="resetForm()">リセット</button>
+      </div>
+
+      <div id="errorBox" class="error"></div>
+    </div>
+
+    <div id="resultArea" class="result card">
+      <h2>鑑定結果</h2>
+      <div id="resultContent"></div>
+    </div>
+  </div>
+
+  <script>
+    const lifeBaseMap = {
+      1: { title: "切り開く人", colorName: "赤", colorCode: "#d84c4c", release: "少しだけ誰かに頼ることで流れが戻ります。", shadow: "一人で背負いすぎると流れが重くなりやすいです。", move: "東", moveNote: "新しい流れを作る方角です。" },
+      2: { title: "支える人", colorName: "ピンク", colorCode: "#e88ab0", release: "本音を少し出すことで流れが整います。", shadow: "周りに合わせすぎると自分を見失いやすくなります。", move: "南西", moveNote: "安心と土台を整える方角です。" },
+      3: { title: "表現する人", colorName: "黄色", colorCode: "#e2b93b", release: "感じたことを外に出すと運が動きます。", shadow: "気持ちを抑えると流れが止まりやすくなります。", move: "東", moveNote: "発展と行動の方角です。" },
+      4: { title: "積み上げる人", colorName: "茶色", colorCode: "#8b6a4e", release: "7割で良いと許すと流れが軽くなります。", shadow: "完璧を求めすぎると動きが重くなります。", move: "東南", moveNote: "縁と広がりを育てる方角です。" },
+      5: { title: "変化する人", colorName: "オレンジ", colorCode: "#eb8c3a", release: "小さく環境を変えると突破口になります。", shadow: "変化を怖がると本来の流れが止まりやすいです。", move: "中央 / 状況次第", moveNote: "勢いより時期を見て動くのが大切です。" },
+      6: { title: "守る人", colorName: "緑", colorCode: "#5ca66a", release: "まず自分を満たすことが開運につながります。", shadow: "人を優先しすぎると自分が空になりやすいです。", move: "北西", moveNote: "仕事や責任を整える方角です。" },
+      7: { title: "深く探る人", colorName: "青", colorCode: "#4f79c8", release: "考える前に小さく動くことで答えが見えてきます。", shadow: "考えすぎると流れが止まりやすいです。", move: "西", moveNote: "気持ちを軽くしやすい方角です。" },
+      8: { title: "現実を動かす人", colorName: "金", colorCode: "#c5a13a", release: "過程を認めると結果もついてきます。", shadow: "結果にこだわりすぎると硬くなりやすいです。", move: "北東", moveNote: "転機と切り替えの方角です。" },
+      9: { title: "包み込む人", colorName: "紫", colorCode: "#8a59b6", release: "少しずつ手放すことで心が軽くなります。", shadow: "抱え込みすぎると重くなりやすいです。", move: "南", moveNote: "魅力と直感を高めやすい方角です。" }
+    };
+
+    const kyuseiMap = {
+      1: { name: "一白水星", good: "北・東", caution: "南" },
+      2: { name: "二黒土星", good: "南西", caution: "北東" },
+      3: { name: "三碧木星", good: "東", caution: "西" },
+      4: { name: "四緑木星", good: "東南", caution: "北西" },
+      5: { name: "五黄土星", good: "中央 / 慎重", caution: "無理な大移動" },
+      6: { name: "六白金星", good: "北西", caution: "南東" },
+      7: { name: "七赤金星", good: "西", caution: "東" },
+      8: { name: "八白土星", good: "北東", caution: "南西" },
+      9: { name: "九紫火星", good: "南", caution: "北" }
+    };
+
+    const hexagrams = ["乾為天","坤為地","水雷屯","山水蒙","水天需","天水訟","地水師","水地比","風天小畜","天沢履","地天泰","天地否","天火同人","火天大有","地山謙","雷地豫","沢雷随","山風蠱","地沢臨","風地観","火雷噬嗑","山火賁","山地剥","地雷復","天雷无妄","山天大畜","山雷頤","沢風大過","坎為水","離為火","沢山咸","雷風恒","天山遯","雷天大壮","火地晋","地火明夷","風火家人","火沢睽","水山蹇","雷水解","山沢損","風雷益","沢天夬","天風姤","沢地萃","地風升","沢水困","水風井","沢火革","火風鼎","震為雷","艮為山","風山漸","雷沢帰妹","雷火豊","火山旅","巽為風","兌為沢","風水渙","水沢節","風沢中孚","雷山小過","水火既済","火水未済"];
+
+    function validBirth(value) {
+      return /^\d{8}$/.test(value);
+    }
+    function reduceNumber(n) {
+      while (n > 9) {
+        n = n.toString().split("").reduce((a,b) => Number(a) + Number(b), 0);
+      }
+      return n;
+    }
+    function getLifeLine(birth) {
+      return reduceNumber(birth.split("").reduce((sum, n) => sum + Number(n), 0));
+    }
+    function getKyusei(year) {
+      let y = year;
+      if (y >= 2000) y -= 2000; else y -= 1900;
+      let num = 10 - (y % 9);
+      if (num === 10) num = 1;
+      if (num === 0) num = 9;
+      return num;
+    }
+    function getHexagram(birth) {
+      const today = new Date();
+      const seed = Number(birth) + today.getFullYear() + today.getMonth() + today.getDate();
+      return hexagrams[seed % 64];
+    }
+    function setTheme(value, el) {
+      document.getElementById('theme').value = value;
+      document.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+      el.classList.add('active');
+    }
+    function resetForm() {
+      ['clientName','birth','consultation','worry','partnerBirth','moveTiming','moveDirection','readerNote'].forEach(id => document.getElementById(id).value = '');
+      document.getElementById('gender').value = '未設定';
+      document.getElementById('theme').value = '総合';
+      document.getElementById('errorBox').style.display = 'none';
+      document.getElementById('resultArea').style.display = 'none';
+      document.querySelectorAll('.chip').forEach(chip => chip.classList.remove('active'));
+    }
+    function generateInputVersion() {
+      const name = document.getElementById('clientName').value.trim() || '未記入';
+      const birth = document.getElementById('birth').value.trim();
+      const gender = document.getElementById('gender').value;
+      const theme = document.getElementById('theme').value;
+      const consultation = document.getElementById('consultation').value.trim() || '未記入';
+      const worry = document.getElementById('worry').value.trim() || '未記入';
+      const partnerBirth = document.getElementById('partnerBirth').value.trim();
+      const moveTiming = document.getElementById('moveTiming').value.trim();
+      const moveDirection = document.getElementById('moveDirection').value.trim();
+      const readerNote = document.getElementById('readerNote').value.trim();
+      const errorBox = document.getElementById('errorBox');
+
+      if (!validBirth(birth)) {
+        errorBox.style.display = 'block';
+        errorBox.textContent = '生年月日は 19671127 のように8桁で入力してください。';
+        return;
+      }
+      if (partnerBirth && !validBirth(partnerBirth)) {
+        errorBox.style.display = 'block';
+        errorBox.textContent = '相手の生年月日も8桁で入力してください。';
+        return;
+      }
+      errorBox.style.display = 'none';
+
+      const life = getLifeLine(birth);
+      const lifeData = lifeBaseMap[life];
+      const year = parseInt(birth.slice(0,4), 10);
+      const kyusei = kyuseiMap[getKyusei(year)];
+      const hex = getHexagram(birth);
+      let pairText = '';
+      if (partnerBirth) {
+        const pairLife = getLifeLine(partnerBirth);
+        pairText = `相手の生命線は ${pairLife} です。${pairLife === life ? '似た流れを持つため、理解し合いやすい相性です。' : '違う個性を持つため、歩幅を合わせることで良い関係を作りやすい相性です。'}`;
+      }
+
+      const moveText = `引越しを見る場合、あなたの生命線では「${lifeData.move}」、九星気学では「${kyusei.good}」が相性の良い方角です。${lifeData.moveNote}${moveTiming ? ` 希望時期は「${moveTiming}」とのことなので、焦らず条件を整えながら決めると安心です。` : ''}${moveDirection ? ` 気になる方角「${moveDirection}」は、今の流れと照らして慎重に判断すると良いです。` : ''}`;
+
+      document.getElementById('resultContent').innerHTML = `
+        <div class="section">
+          <h3>基本情報</h3>
+          <div class="muted">${name} / ${gender} / テーマ：${theme}</div>
+        </div>
+        <div class="section">
+          <h3>生命線と中心カラー</h3>
+          <p><strong>生命線：</strong>${life}（${lifeData.title}）</p>
+          <p><strong>中心カラー：</strong><span style="font-weight:700;color:${lifeData.colorCode};">${lifeData.colorName}</span></p>
+          <p>${lifeData.shadow}</p>
+          <p><strong>解放の鍵：</strong>${lifeData.release}</p>
+        </div>
+        <div class="section">
+          <h3>今の答え（易）</h3>
+          <p><strong>${hex}</strong></p>
+          <p>今は焦って結論を出すより、流れの意味を読みながら一つずつ整えることが大切な時です。</p>
+        </div>
+        <div class="section">
+          <h3>九星気学と方位</h3>
+          <p><strong>${kyusei.name}</strong></p>
+          <p>良い方角：${kyusei.good}</p>
+          <p>慎重にしたい方角：${kyusei.caution}</p>
+          <p>${moveText}</p>
+        </div>
+        <div class="section">
+          <h3>相談内容に対する読み</h3>
+          <p><strong>相談内容：</strong>${consultation}</p>
+          <p><strong>今の悩み：</strong>${worry}</p>
+          <p>テーマ「${theme}」では、今は本質の使い方を整えることが最優先です。無理に答えを急がず、まずは流れを戻すことが大切です。</p>
+        </div>
+        ${pairText ? `<div class="section"><h3>相性</h3><p>${pairText}</p></div>` : ''}
+        ${readerNote ? `<div class="section"><h3>占い師メモ</h3><p>${readerNote}</p></div>` : ''}
+      `;
+
+      document.getElementById('resultArea').style.display = 'block';
+      document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>
