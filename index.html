@@ -3,6 +3,456 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>問いに沿った本格占い鑑定</title>
+  <style>
+    body {
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #fffafc 0%, #fdf7ff 50%, #fffdf8 100%);
+      color: #333;
+    }
+
+    .wrap {
+      max-width: 760px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.95);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(122, 94, 180, 0.12);
+      border: 1px solid #f0e5ff;
+    }
+
+    h1 {
+      text-align: center;
+      color: #8c5bd6;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+
+    .sub {
+      text-align: center;
+      color: #8a7ca8;
+      margin-bottom: 28px;
+      font-size: 14px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #6e4db5;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #dcccf8;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 16px;
+      background: #fff;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #b58cff;
+      box-shadow: 0 0 0 4px rgba(181, 140, 255, 0.15);
+    }
+
+    .btn {
+      width: 100%;
+      margin-top: 22px;
+      padding: 16px;
+      border: none;
+      border-radius: 16px;
+      font-size: 17px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #b57cff, #e48bd4);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(181, 124, 255, 0.25);
+    }
+
+    .btn:hover {
+      opacity: 0.95;
+    }
+
+    .result {
+      margin-top: 26px;
+      padding: 22px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff 0%, #fcf8ff 100%);
+      border: 1px solid #eadcff;
+      white-space: pre-wrap;
+      line-height: 1.9;
+      font-size: 15.5px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #f2e9ff;
+      color: #7a46ca;
+      font-size: 12px;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+
+    .note {
+      margin-top: 18px;
+      color: #7e7195;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .section-title {
+      margin-top: 18px;
+      margin-bottom: 8px;
+      color: #7b57bb;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      color: #9b8cb8;
+      font-size: 12px;
+      margin: 18px 0 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>問いに沿った本格占い鑑定</h1>
+      <div class="sub">ご相談内容に合わせて、鑑定文が変わる設計です</div>
+
+      <label for="name">お名前</label>
+      <input type="text" id="name" placeholder="例：山田 花子" />
+
+      <label for="birthdate">生年月日</label>
+      <input type="date" id="birthdate" />
+
+      <label for="category">相談ジャンル</label>
+      <select id="category">
+        <option value="auto">自動判定</option>
+        <option value="love">恋愛</option>
+        <option value="reunion">復縁</option>
+        <option value="marriage">結婚</option>
+        <option value="work">仕事・転職</option>
+        <option value="money">金運</option>
+        <option value="relationship">人間関係</option>
+        <option value="health">健康</option>
+        <option value="timing">時期</option>
+        <option value="general">総合運</option>
+      </select>
+
+      <label for="question">ご相談内容</label>
+      <textarea id="question" placeholder="例：今好きな人との関係は進展しますか？いつ頃動けばいいですか？"></textarea>
+
+      <button class="btn" onclick="startFortune()">鑑定する</button>
+
+      <div id="result" class="result" style="display:none;"></div>
+
+      <div class="note">
+        ※ この無料版は「問いに沿う文章設計」を重視した構成です。<br>
+        今後、有料版では四柱推命・九星気学・易・占星術の統合版に発展させやすい土台になっています。
+      </div>
+    </div>
+    <footer>MOA Fortune System</footer>
+  </div>
+
+  <script>
+    function startFortune() {
+      const name = document.getElementById("name").value.trim();
+      const birthdate = document.getElementById("birthdate").value;
+      const question = document.getElementById("question").value.trim();
+      const selectedCategory = document.getElementById("category").value;
+      const resultBox = document.getElementById("result");
+
+      if (!name || !birthdate || !question) {
+        resultBox.style.display = "block";
+        resultBox.innerHTML = "お名前・生年月日・ご相談内容をすべてご入力ください。";
+        return;
+      }
+
+      const detectedCategory = selectedCategory === "auto"
+        ? detectCategory(question)
+        : selectedCategory;
+
+      const fortuneBase = getFortuneBase(name, birthdate, question, detectedCategory);
+      const output = buildReading(name, detectedCategory, fortuneBase, question);
+
+      resultBox.style.display = "block";
+      resultBox.innerHTML = output;
+    }
+
+    function detectCategory(question) {
+      const q = question.toLowerCase();
+
+      if (
+        q.includes("復縁") || q.includes("元彼") || q.includes("元カレ") ||
+        q.includes("元彼女") || q.includes("別れた") || q.includes("やり直")
+      ) {
+        return "reunion";
+      }
+
+      if (
+        q.includes("結婚") || q.includes("婚約") || q.includes("入籍") ||
+        q.includes("夫婦")
+      ) {
+        return "marriage";
+      }
+
+      if (
+        q.includes("恋愛") || q.includes("彼") || q.includes("彼女") ||
+        q.includes("好きな人") || q.includes("相手の気持ち") || q.includes("恋")
+      ) {
+        return "love";
+      }
+
+      if (
+        q.includes("仕事") || q.includes("転職") || q.includes("職場") ||
+        q.includes("就職") || q.includes("昇進") || q.includes("独立") ||
+        q.includes("働")
+      ) {
+        return "work";
+      }
+
+      if (
+        q.includes("お金") || q.includes("金運") || q.includes("収入") ||
+        q.includes("貯金") || q.includes("投資") || q.includes("生活費") ||
+        q.includes("売上")
+      ) {
+        return "money";
+      }
+
+      if (
+        q.includes("人間関係") || q.includes("家族") || q.includes("友達") ||
+        q.includes("知人") || q.includes("仲") || q.includes("対人")
+      ) {
+        return "relationship";
+      }
+
+      if (
+        q.includes("健康") || q.includes("体調") || q.includes("疲れ") ||
+        q.includes("病気") || q.includes("不調")
+      ) {
+        return "health";
+      }
+
+      if (
+        q.includes("いつ") || q.includes("時期") || q.includes("タイミング") ||
+        q.includes("何月") || q.includes("頃")
+      ) {
+        return "timing";
+      }
+
+      return "general";
+    }
+
+    function getFortuneBase(name, birthdate, question, category) {
+      const seed = stringToNumber(name + birthdate + question + category);
+      const tone = seed % 3;
+      const flow = seed % 5;
+      const luck = seed % 4;
+      const month = ((seed % 6) + 1);
+
+      const tones = [
+        "穏やかに流れを整えることで道が開きやすい運気",
+        "今は焦らず土台を固めるほど後半で実りやすい運気",
+        "直感と現実のバランスを取ることで成果につながる運気"
+      ];
+
+      const flows = [
+        "今は大きく動く前に状況を見極める段階",
+        "少しずつ好転していく前向きな流れ",
+        "迷いが減るほど現実が整いやすい流れ",
+        "一度立ち止まることで正解が見えやすくなる流れ",
+        "人との関わりから運が開く流れ"
+      ];
+
+      const lucks = [
+        "今月後半",
+        "来月上旬",
+        "来月中旬",
+        "2か月以内"
+      ];
+
+      return {
+        overallTone: tones[tone],
+        currentFlow: flows[flow],
+        favorableTiming: lucks[luck],
+        supportMonth: month + "か月以内",
+        seed: seed
+      };
+    }
+
+    function buildReading(name, category, base, question) {
+      const titleMap = {
+        love: "恋愛鑑定",
+        reunion: "復縁鑑定",
+        marriage: "結婚鑑定",
+        work: "仕事鑑定",
+        money: "金運鑑定",
+        relationship: "人間関係鑑定",
+        health: "健康鑑定",
+        timing: "時期鑑定",
+        general: "総合鑑定"
+      };
+
+      const content = getCategoryContent(category, base, question);
+
+      return `
+<div class="badge">${titleMap[category]}</div>
+
+【ご相談への結論】  
+${name}様のご相談「${question}」について見ると、${content.conclusion}
+
+【今の状況】  
+${content.current}
+
+【読み取れる流れ】  
+${content.flow}
+
+【今取るべき行動】  
+${content.action}
+
+【注意点】  
+${content.caution}
+
+【良い時期】  
+${content.timing}
+
+【総合アドバイス】  
+${content.advice}
+      `;
+    }
+
+    function getCategoryContent(category, base, question) {
+      const commonAdvice = `全体としては、${base.overallTone}です。${base.currentFlow}ため、感情だけで急がず、現実的な一歩を丁寧に積み重ねることが開運につながります。`;
+
+      const data = {
+        love: {
+          conclusion: "恋の流れ自体は止まっておらず、関係を育てる余地があります。ただし、急ぎすぎると相手のペースとずれやすいため、慎重さが必要です。",
+          current: "今は気持ちが先行しやすい時ですが、相手側には迷いや様子見の空気もあります。強く押すより、安心感を与える関わり方が大切な時です。",
+          flow: "恋愛運はゆっくり上向きです。会話の質や距離感の取り方によって、相手の反応が変わりやすい時期です。",
+          action: "連絡を取るなら重くならない内容にし、相手が返しやすい言葉を選ぶことです。優しさ・自然さ・余裕を見せるほど良い流れになります。",
+          caution: "返事を急かすこと、気持ちを一気に伝えすぎること、不安から何度も確認することは逆効果になりやすいです。",
+          timing: `${base.favorableTiming}に関係が少し動きやすくなります。特に、自然な再接点や会話の増加が期待できます。`,
+          advice: commonAdvice
+        },
+
+        reunion: {
+          conclusion: "復縁の可能性は残っていますが、今すぐ結果を求めるより、関係修復の土台作りが先です。",
+          current: "相手の心が完全に閉じているわけではありません。ただし、過去の感情や警戒心がまだ少し残りやすく、タイミングの見極めが重要です。",
+          flow: "今は感情を整理しながら距離を縮めていく流れです。焦って一気に元に戻そうとするより、自然なやり取りを増やす方が有効です。",
+          action: "まずは軽い連絡や、相手が負担に感じにくい接し方から始めることです。謝るべき点がある場合は短く誠実に伝えるのが良いでしょう。",
+          caution: "未練を強くぶつけること、過去を責めること、返答を求め続けることは関係改善を遠ざけやすいです。",
+          timing: `${base.favorableTiming}から${base.supportMonth}の間に、再接点や心の変化が出やすい運気です。`,
+          advice: commonAdvice
+        },
+
+        marriage: {
+          conclusion: "結婚運は現実面を整えるほど前向きに進みやすい流れです。感情だけでなく、生活・価値観・将来設計が鍵になります。",
+          current: "結婚に対する気持ちは高まりやすい一方で、現実的な不安や確認事項も浮かびやすい時です。話し合いの深さが今後を左右します。",
+          flow: "勢いより安定が大事な流れです。信頼感や生活感の相性を丁寧に確認できる関係ほど、進展しやすくなります。",
+          action: "将来の住まい、お金、仕事、家族観などを落ち着いて話し合うことが大切です。曖昧なままにしないことが運を上げます。",
+          caution: "理想だけで判断すること、結論を急ぐこと、相手に期待を押し付けることはすれ違いにつながりやすいです。",
+          timing: `${base.favorableTiming}前後に具体的な話が進みやすく、方向性を決めるきっかけが生まれやすいです。`,
+          advice: commonAdvice
+        },
+
+        work: {
+          conclusion: "仕事運は努力が形になりやすい一方で、動く順番を間違えないことが大切な時期です。",
+          current: "今は責任や課題が見えやすい時ですが、その分だけ改善点もはっきりしやすい流れです。着実に進めるほど評価につながります。",
+          flow: "派手な展開より、積み重ね型の上昇運です。周囲との連携や信用の積み上げが、今後のチャンスにつながります。",
+          action: "今は目の前の仕事の完成度を高め、必要な準備を整えてから次の一手を打つことが大切です。転職や方向転換も準備次第で良い流れになります。",
+          caution: "感情的な判断、衝動的な退職、周囲と比較して焦ることは運気を乱しやすいです。",
+          timing: `${base.favorableTiming}に仕事の流れが整いやすく、評価や新しい話が入りやすいです。`,
+          advice: commonAdvice
+        },
+
+        money: {
+          conclusion: "金運は大きく崩れる流れではありませんが、入る運よりも使い方の質が結果を左右しやすい時です。",
+          current: "お金に関する不安や見直しポイントが表面化しやすい時期です。逆に言えば、今整えることで後の安定につながります。",
+          flow: "節約と増やし方の両方を見直すことで、徐々に改善しやすい流れです。堅実な選択が吉です。",
+          action: "固定費の見直し、無駄遣いの整理、小さくても継続できる収入アップ策に取り組むことが大切です。",
+          caution: "衝動買い、見栄の出費、曖昧な投資話に乗ることは避けた方が良いです。",
+          timing: `${base.favorableTiming}から金運が整いやすくなり、出入りのバランスが良くなりやすいです。`,
+          advice: commonAdvice
+        },
+
+        relationship: {
+          conclusion: "人間関係は修復も発展も可能な流れですが、言葉選びと距離感がとても大切になります。",
+          current: "今は相手の反応に敏感になりやすい時です。そのため、思い込みよりも事実確認を大切にした方が良い流れになります。",
+          flow: "少しの誤解が広がりやすい一方で、丁寧な対応によって信頼を取り戻しやすい時期でもあります。",
+          action: "結論を急がず、相手の立場を尊重しながら話すことが大切です。聞く姿勢を持つほど関係は整いやすくなります。",
+          caution: "感情的な言い方、一方的な決めつけ、連絡のしすぎは関係をこじらせやすいです。",
+          timing: `${base.favorableTiming}に関係改善や理解が深まりやすい運気です。`,
+          advice: commonAdvice
+        },
+
+        health: {
+          conclusion: "健康面は大きな無理を避け、生活のリズムを整えるほど安定しやすい流れです。",
+          current: "心身の疲れが積み重なりやすく、気づかないうちにエネルギーを消耗している暗示があります。まず休養の質を見直すことが大切です。",
+          flow: "回復には勢いより継続が必要な流れです。睡眠・食事・気持ちの安定を整えることで、少しずつ良い方向に向かいやすいです。",
+          action: "夜更かしを減らし、食生活と休息を整え、無理を感じたら早めに休むことです。心の疲れも軽く見ないことが大事です。",
+          caution: "我慢のしすぎ、忙しさを理由に後回しにすること、自己判断だけで無理を続けることは避けてください。",
+          timing: `${base.favorableTiming}にかけて徐々に整いやすくなりますが、早めのケアが開運行動です。`,
+          advice: commonAdvice + " ※体調に不安が強い場合は、占いだけで判断せず専門機関にもご相談ください。"
+        },
+
+        timing: {
+          conclusion: "今のご相談は、動くべき時期を見極めることが非常に重要です。早すぎる行動より、流れに乗ることが結果を良くします。",
+          current: "現状は準備と見極めの要素が強く、焦るほど空回りしやすい暗示があります。今は土台を整える意味が大きい時です。",
+          flow: "これから徐々に状況が動きやすくなる流れに入ります。今は観察、次に実行という順番が鍵です。",
+          action: "今すぐ決断するより、情報整理・気持ちの整理・相手や状況の反応確認を優先してください。",
+          caution: "不安に押されて先走ること、周囲に流されること、勢いだけで決めることは避けた方が良いです。",
+          timing: `最も流れが整いやすいのは${base.favorableTiming}です。その前の期間は準備期間として使うと成功率が上がります。`,
+          advice: commonAdvice
+        },
+
+        general: {
+          conclusion: "全体運は静かに上向いており、焦らず整えるほど良い結果につながりやすい流れです。",
+          current: "今は内面と現実の両方を整えることが求められる時期です。迷いがある場合ほど、足元を固めることが運を安定させます。",
+          flow: "大きな飛躍の前に、必要な準備や見直しが入りやすい流れです。その過程を丁寧に行うことで運気は育っていきます。",
+          action: "身の回りの整理、人間関係の調整、優先順位の見直しを行うと運が巡りやすくなります。",
+          caution: "一度に多くを進めようとすること、疲れを溜めること、気分だけで方向転換することは避けてください。",
+          timing: `${base.favorableTiming}に運の追い風を感じやすくなります。今はそのための準備期間です。`,
+          advice: commonAdvice
+        }
+      };
+
+      return data[category] || data.general;
+    }
+
+    function stringToNumber(str) {
+      let total = 0;
+      for (let i = 0; i < str.length; i++) {
+        total += str.charCodeAt(i) * (i + 1);
+      }
+      return total;
+    }
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>生命線リーディング統合占術 実用版＋ルーン</title>
   <style>
     :root {
