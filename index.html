@@ -2,80 +2,330 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>占い師専用ソフト</title>
 
 <style>
-body{font-family:sans-serif;background:#0e0b1c;color:#fff;padding:20px;}
-.box{max-width:900px;margin:auto;background:#1b1330;padding:20px;border-radius:20px;}
-h1{text-align:center;color:#f3d77f;}
-input,textarea{width:100%;padding:10px;margin-top:10px;border-radius:10px;border:none;}
-button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:10px;background:#d4af37;font-weight:bold;}
-.result{margin-top:20px;white-space:pre-wrap;}
+body{
+  font-family:sans-serif;
+  background:#0e0b1c;
+  color:#fff;
+  padding:20px;
+}
+.box{
+  max-width:900px;
+  margin:auto;
+  background:#1b1330;
+  padding:20px;
+  border-radius:20px;
+}
+h1{
+  text-align:center;
+  color:#f3d77f;
+}
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:10px;
+  border:none;
+}
+button{
+  width:100%;
+  padding:15px;
+  margin-top:15px;
+  border:none;
+  border-radius:10px;
+  background:#d4af37;
+  font-weight:bold;
+}
+.result{
+  margin-top:20px;
+  white-space:pre-wrap;
+  line-height:1.8;
+}
+.link-btn{
+  display:block;
+  width:100%;
+  text-align:center;
+  padding:15px;
+  margin-top:15px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+  box-sizing:border-box;
+}
 </style>
 </head>
 
 <body>
 
 <div class="box">
-<h1>占い師専用ソフト</h1>
+  <h1>占い師専用ソフト</h1>
 
-<input id="name" placeholder="名前">
-<input type="date" id="birth">
+  <input id="name" placeholder="名前">
+  <input type="date" id="birth">
+  <textarea id="question" placeholder="相談内容"></textarea>
 
-<textarea id="question" placeholder="相談内容"></textarea>
+  <button onclick="uranai()">鑑定する</button>
+  <button onclick="copyText()">鑑定書コピー</button>
 
-<button onclick="uranai()">鑑定する</button>
+  <a class="link-btn" href="https://www.instagram.com/moahetonghuishe" target="_blank" rel="noopener noreferrer">
+    鑑定はこちら（Instagram）
+  </a>
 
-<div id="result" class="result"></div>
-
-<a href="https://www.instagram.com/moahetonghuishe" target="_blank">
-鑑定はこちら（Instagram）
-</a>
-
+  <div id="result" class="result"></div>
 </div>
 
 <script>
+// ===== 基本 =====
+const stems = ["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+const branches = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
 
-const stems=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
-const branches=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
-
+// ===== 命式 =====
 function getYear(y){
-let i=y-1984;
-return stems[i%10]+branches[i%12];
+  const i = y - 1984;
+  return stems[(i % 10 + 10) % 10] + branches[(i % 12 + 12) % 12];
 }
 
+function getMonth(yearStem, m){
+  const map = {
+    "甲":"丙","己":"丙",
+    "乙":"戊","庚":"戊",
+    "丙":"庚","辛":"庚",
+    "丁":"壬","壬":"壬",
+    "戊":"甲","癸":"甲"
+  };
+  const i = stems.indexOf(map[yearStem]);
+  return stems[(i + m - 1) % 10] + branches[(m + 1) % 12];
+}
+
+function getDay(y, m, d){
+  const base = new Date(1900, 0, 1);
+  const t = new Date(y, m - 1, d);
+  const diff = Math.floor((t - base) / 86400000);
+  return stems[(diff % 10 + 10) % 10] + branches[(diff % 12 + 12) % 12];
+}
+
+function getHour(dayStem){
+  const idx = 6; // 午固定
+  const map = {
+    "甲":"甲","己":"甲",
+    "乙":"丙","庚":"丙",
+    "丙":"戊","辛":"戊",
+    "丁":"庚","壬":"庚",
+    "戊":"壬","癸":"壬"
+  };
+  const i = stems.indexOf(map[dayStem]);
+  return stems[(i + idx) % 10] + branches[idx];
+}
+
+function getElement(stem){
+  return {
+    "甲":"木","乙":"木",
+    "丙":"火","丁":"火",
+    "戊":"土","己":"土",
+    "庚":"金","辛":"金",
+    "壬":"水","癸":"水"
+  }[stem];
+}
+
+// ===== 通変星 =====
+function getTsuhen(dayStem, targetStem){
+  const elementMap = {
+    "甲":"木","乙":"木","丙":"火","丁":"火",
+    "戊":"土","己":"土","庚":"金","辛":"金",
+    "壬":"水","癸":"水"
+  };
+
+  const yinYangMap = {
+    "甲":1,"乙":0,"丙":1,"丁":0,
+    "戊":1,"己":0,"庚":1,"辛":0,
+    "壬":1,"癸":0
+  };
+
+  function produces(a, b){
+    return (
+      (a==="木"&&b==="火") ||
+      (a==="火"&&b==="土") ||
+      (a==="土"&&b==="金") ||
+      (a==="金"&&b==="水") ||
+      (a==="水"&&b==="木")
+    );
+  }
+
+  function controls(a, b){
+    return (
+      (a==="木"&&b==="土") ||
+      (a==="土"&&b==="水") ||
+      (a==="水"&&b==="火") ||
+      (a==="火"&&b==="金") ||
+      (a==="金"&&b==="木")
+    );
+  }
+
+  const dayElement = elementMap[dayStem];
+  const targetElement = elementMap[targetStem];
+  const samePolarity = yinYangMap[dayStem] === yinYangMap[targetStem];
+
+  if(dayElement === targetElement){
+    return samePolarity ? "比肩" : "劫財";
+  }
+  if(produces(dayElement, targetElement)){
+    return samePolarity ? "食神" : "傷官";
+  }
+  if(controls(dayElement, targetElement)){
+    return samePolarity ? "偏財" : "正財";
+  }
+  if(controls(targetElement, dayElement)){
+    return samePolarity ? "偏官" : "正官";
+  }
+  if(produces(targetElement, dayElement)){
+    return samePolarity ? "偏印" : "印綬";
+  }
+
+  return "";
+}
+
+// ===== 十二運 =====
+function getJuniun(dayStem, branch){
+  const table = {
+    "甲":["亥:長生","子:沐浴","丑:冠帯","寅:建禄","卯:帝旺","辰:衰","巳:病","午:死","未:墓","申:絶","酉:胎","戌:養"],
+    "乙":["午:長生","巳:沐浴","辰:冠帯","卯:建禄","寅:帝旺","丑:衰","子:病","亥:死","戌:墓","酉:絶","申:胎","未:養"],
+    "丙":["寅:長生","卯:沐浴","辰:冠帯","巳:建禄","午:帝旺","未:衰","申:病","酉:死","戌:墓","亥:絶","子:胎","丑:養"],
+    "丁":["酉:長生","申:沐浴","未:冠帯","午:建禄","巳:帝旺","辰:衰","卯:病","寅:死","丑:墓","子:絶","亥:胎","戌:養"],
+    "戊":["寅:長生","卯:沐浴","辰:冠帯","巳:建禄","午:帝旺","未:衰","申:病","酉:死","戌:墓","亥:絶","子:胎","丑:養"],
+    "己":["酉:長生","申:沐浴","未:冠帯","午:建禄","巳:帝旺","辰:衰","卯:病","寅:死","丑:墓","子:絶","亥:胎","戌:養"],
+    "庚":["巳:長生","午:沐浴","未:冠帯","申:建禄","酉:帝旺","戌:衰","亥:病","子:死","丑:墓","寅:絶","卯:胎","辰:養"],
+    "辛":["子:長生","亥:沐浴","戌:冠帯","酉:建禄","申:帝旺","未:衰","午:病","巳:死","辰:墓","卯:絶","寅:胎","丑:養"],
+    "壬":["申:長生","酉:沐浴","戌:冠帯","亥:建禄","子:帝旺","丑:衰","寅:病","卯:死","辰:墓","巳:絶","午:胎","未:養"],
+    "癸":["卯:長生","寅:沐浴","丑:冠帯","子:建禄","亥:帝旺","戌:衰","酉:病","申:死","未:墓","午:絶","巳:胎","辰:養"]
+  };
+
+  const list = table[dayStem] || [];
+  const found = list.find(v => v.startsWith(branch + ":"));
+  return found ? found.split(":")[1] : "";
+}
+
+// ===== 大運 =====
+function getDaiun(monthStem, monthBranch, yearStem, gender, birthYear){
+  let isYang = ["甲","丙","戊","庚","壬"].includes(yearStem);
+  let forward = true;
+
+  if(gender === "男性"){
+    forward = isYang;
+  }else if(gender === "女性"){
+    forward = !isYang;
+  }
+
+  let stemIndex = stems.indexOf(monthStem);
+  let branchIndex = branches.indexOf(monthBranch);
+  let daiun = [];
+  let startAge = 8; // 簡易
+
+  for(let i = 0; i < 8; i++){
+    if(forward){
+      stemIndex = (stemIndex + 1) % 10;
+      branchIndex = (branchIndex + 1) % 12;
+    }else{
+      stemIndex = (stemIndex - 1 + 10) % 10;
+      branchIndex = (branchIndex - 1 + 12) % 12;
+    }
+
+    daiun.push({
+      age: startAge + i * 10,
+      pillar: stems[stemIndex] + branches[branchIndex],
+      year: birthYear + startAge + i * 10
+    });
+  }
+
+  return daiun;
+}
+
+// ===== 流年 =====
+function getYearPillarFull(year){
+  const index = year - 1984;
+  return stems[(index % 10 + 10) % 10] + branches[(index % 12 + 12) % 12];
+}
+
+// ===== メイン =====
 function uranai(){
+  const name = document.getElementById("name").value;
+  const birth = document.getElementById("birth").value;
+  const q = document.getElementById("question").value;
 
-let name=document.getElementById("name").value;
-let birth=document.getElementById("birth").value;
-let q=document.getElementById("question").value;
+  if(!name || !birth){
+    alert("入力してください");
+    return;
+  }
 
-if(!name||!birth){
-alert("入力してください");
-return;
-}
+  const [y, m, d] = birth.split("-").map(Number);
 
-let y=Number(birth.split("-")[0]);
+  const Y = getYear(y);
+  const M = getMonth(Y[0], m);
+  const D = getDay(y, m, d);
+  const H = getHour(D[0]);
 
-let year=getYear(y);
+  const dayStem = D[0];
+  const element = getElement(dayStem);
 
-let result=`
+  const tsYear = getTsuhen(dayStem, Y[0]);
+  const tsMonth = getTsuhen(dayStem, M[0]);
+  const tsHour = getTsuhen(dayStem, H[0]);
+
+  const juYear = getJuniun(dayStem, Y[1]);
+  const juMonth = getJuniun(dayStem, M[1]);
+  const juDay = getJuniun(dayStem, D[1]);
+  const juHour = getJuniun(dayStem, H[1]);
+
+  const gender = "女性";
+  const daiun = getDaiun(M[0], M[1], Y[0], gender, y);
+  const thisYear = new Date().getFullYear();
+  const nenun = getYearPillarFull(thisYear);
+
+  const result = `
 【命式】
-年柱：${year}
+年柱：${Y}（${tsYear}）
+月柱：${M}（${tsMonth}）
+日柱：${D}
+時柱：${H}（${tsHour}）
+
+【十二運】
+年：${juYear}
+月：${juMonth}
+日：${juDay}
+時：${juHour}
+
+日主：${dayStem}（${element}）
+
+【大運】
+${daiun.map(d => `${d.age}歳：${d.pillar}`).join("\n")}
+
+【今年の運】
+${thisYear}年：${nenun}
 
 【鑑定】
-${name}様は強い芯を持つ方です。
+${name}様は${element}の性質を中心に人生が動く方です。
+
+${element==="木"?"成長型":element==="火"?"情熱型":element==="土"?"安定型":element==="金"?"決断型":"知性型"}の強さがあります。
+通変星と十二運から見ると、内面を整えながら運を育てる力が強い方です。
 
 【相談】
 ${q}
 
 【答え】
-今は焦らず整える時です。
+今は焦らず整えることで運が開きます。
 `;
 
-document.getElementById("result").innerText=result;
+  document.getElementById("result").innerText = result;
 }
 
+function copyText(){
+  navigator.clipboard.writeText(document.getElementById("result").innerText);
+  alert("コピーしました");
+}
 </script>
 
 </body>
