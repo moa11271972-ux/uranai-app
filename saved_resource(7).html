@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<!-- saved from url=(0040)https://web-sandbox.oaiusercontent.com/? -->
+<html lang="ja"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>正統占術総合鑑定 専門ソフト版</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 18px;
+      font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,0.12), transparent 30%),
+        linear-gradient(135deg, #0d0915 0%, #1b1128 45%, #f5efe5 140%);
+      color: #f7efdf; min-height: 100vh;
+    }
+    .container { max-width: 1440px; margin: 0 auto; }
+    .card {
+      background: rgba(18, 11, 28, 0.94);
+      border: 1px solid rgba(212,175,55,0.26);
+      border-radius: 26px; overflow: hidden;
+      box-shadow: 0 18px 46px rgba(0,0,0,0.36);
+      backdrop-filter: blur(8px);
+    }
+    .hero {
+      padding: 34px 24px 24px;
+      border-bottom: 1px solid rgba(212,175,55,0.16);
+      background: linear-gradient(180deg, rgba(212,175,55,0.08), rgba(255,255,255,0));
+    }
+    .badge {
+      display:inline-block; padding:8px 14px; margin-bottom:14px;
+      border:1px solid rgba(212,175,55,0.52); border-radius:999px;
+      color:#f3d77f; background:rgba(212,175,55,0.08); font-size:13px;
+      letter-spacing:.06em;
+    }
+    h1 { margin: 0 0 10px; font-size: 34px; line-height: 1.35; color:#fff7df; }
+    .sub { max-width: 1040px; font-size: 15px; line-height: 1.95; color:#eee2c8; }
+    .menu, .btn-row { display:flex; flex-wrap:wrap; gap:10px; }
+    .menu { margin-top:18px; }
+    .btn-row { margin-top:16px; }
+    .wrap { padding:22px; }
+    .section { display:none; }
+    .section.active { display:block; }
+    .grid { display:grid; gap:18px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+    .grid-5 { grid-template-columns: repeat(5, minmax(0,1fr)); }
+    .panel,.box,.pillbox {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(212,175,55,0.16);
+      border-radius: 18px; padding:18px; margin-bottom:16px;
+    }
+    .panel-title { margin:0 0 14px; color:#f7d57f; font-size:18px; font-weight:700; }
+    .field { margin-bottom:14px; }
+    label { display:block; margin-bottom:8px; font-size:14px; color:#f2e3bf; font-weight:600; }
+    input, select, textarea {
+      width:100%; border-radius:12px; padding:13px 14px;
+      border:1px solid rgba(212,175,55,0.24);
+      background:rgba(255,255,255,0.08); color:#fff; font-size:15px; outline:none;
+    }
+    textarea { min-height:110px; resize:vertical; line-height:1.8; }
+    input::placeholder, textarea::placeholder { color:#d9ccad; }
+    .mode-cards,.lead-cards,.check-grid,.pillars-grid,.mini-grid,.daiun-grid,.year-grid,.month-grid,.compat-grid,.report-grid { display:grid; gap:14px; }
+    .mode-cards,.lead-cards,.pillars-grid,.daiun-grid,.compat-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .check-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .mini-grid { grid-template-columns:repeat(5,minmax(0,1fr)); }
+    .year-grid,.month-grid { grid-template-columns:repeat(6,minmax(0,1fr)); }
+    .report-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .mode-card,.lead-card,.check-item,.pill-card,.mini-card,.year-card,.month-card,.compat-card,.report-card {
+      padding:14px; border-radius:14px; border:1px solid rgba(212,175,55,0.16); background:rgba(255,255,255,0.04);
+    }
+    .mode-card { cursor:pointer; transition:.2s ease; }
+    .mode-card.active { background:linear-gradient(135deg, rgba(212,175,55,0.16), rgba(255,255,255,0.04)); border-color: rgba(212,175,55,0.4); }
+    .check-item { display:flex; align-items:center; gap:10px; }
+    .check-item input { width:auto; transform:scale(1.1); }
+    .mode-card h3,.lead-card h3,.pill-card h3,.mini-card h3,.year-card h3 { margin:0 0 8px; color:#f8d98a; font-size:16px; }
+    .mode-card p,.lead-card p,.pill-card p,.mini-card p,.year-card p,.small,.result-text,.meta-text { margin:0; line-height:1.85; color:#f7efdf; white-space:pre-wrap; }
+    .summary-box {
+      background: linear-gradient(135deg, rgba(212,175,55,0.16), rgba(255,255,255,0.05));
+      color:#fff8e8; line-height:1.95;
+    }
+    button {
+      padding:14px 20px; border:none; border-radius:14px; cursor:pointer;
+      font-weight:700; font-size:15px; transition:.2s ease;
+    }
+    button:hover, .insta-btn:hover { transform: translateY(-1px); }
+    .btn-primary { background:linear-gradient(135deg,#d4af37,#f3db90); color:#2b1a00; }
+    .btn-secondary { background:rgba(255,255,255,0.08); border:1px solid rgba(212,175,55,0.2); color:#fff5dc; }
+    .btn-danger { background:rgba(180,63,63,0.18); border:1px solid rgba(255,120,120,0.28); color:#ffd7d7; }
+    .insta-btn {
+      display:inline-flex; align-items:center; justify-content:center; padding:14px 20px; border-radius:14px;
+      font-weight:700; font-size:15px; text-decoration:none; color:#fff;
+      background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045); border:1px solid rgba(255,255,255,0.18);
+    }
+    .small { font-size:13px; color:#d9ceb8; }
+    .hidden { display:none; }
+    .tag-good,.tag-neutral,.tag-caution{
+      display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; margin-bottom:8px;
+      border:1px solid rgba(212,175,55,0.25);
+    }
+    .tag-good{ background:rgba(80,160,90,0.18); color:#dff6df; }
+    .tag-neutral{ background:rgba(212,175,55,0.12); color:#fff2bf; }
+    .tag-caution{ background:rgba(180,63,63,0.18); color:#ffdada; }
+    table { width:100%; border-collapse:collapse; }
+    th, td { border:1px solid rgba(212,175,55,0.18); padding:10px; text-align:left; vertical-align:top; }
+    th { color:#f7d57f; font-weight:700; background:rgba(255,255,255,0.04); }
+    .footer-note { margin-top:14px; color:#d9ceb9; font-size:13px; line-height:1.8; }
+    @media (max-width: 980px) {
+      .grid-2,.grid-3,.grid-4,.grid-5,.mode-cards,.lead-cards,.check-grid,.pillars-grid,.mini-grid,.daiun-grid,.year-grid { grid-template-columns:1fr; }
+      h1 { font-size:28px; }
+      .wrap { padding:16px; }
+    }
+    @media print {
+      body { background:#fff; color:#111; padding:0; }
+      .card { background:#fff; box-shadow:none; border:none; }
+      .hero,.menu,.btn-row,#section-home,#section-form,#section-history,.footer-note { display:none !important; }
+      .section { display:none !important; }
+      #section-result { display:block !important; }
+      .panel,.box,.pillbox,.summary-box { background:#fff; color:#111; border:1px solid #ccc; }
+      .result-text,.meta-text,.small,.pill-card p,.mini-card p,.year-card p { color:#111 !important; }
+    }
+  </style>
+<style>html,body,#root{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;margin:0;padding:0}html,body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica Neue,Arial,sans-serif!important}button,input,textarea,select{font-family:inherit}html{background-color:#fff}html.dark{background-color:#212121}html.mobileSkybridge.dark{background-color:#000}@supports (font: -apple-system-body){html.mobileSkybridge{font:-apple-system-body}}html.desktopSkybridge.dark{background-color:#1e1e1e}html.androidSkybridge,html.androidSkybridge body,html.androidSkybridge *{-webkit-tap-highlight-color:rgba(255,255,255,0)}html.androidSkybridge *::selection,html.androidSkybridge *::-moz-selection{background:#fff0;color:inherit}</style></head>
+<body>
+  <div class="container">
+    <div class="card">
+      <div class="hero">
+        <div class="badge">専門ソフト版｜正統占術総合鑑定</div>
+        <h1>占い師専用アプリ 専門ソフト版</h1>
+        <div class="sub">
+          占い師の実務で使いやすいように、通常鑑定・相性鑑定・時期鑑定・詳細鑑定を切り替えながら、
+          四柱推命の命式・蔵干・通変星・十二運・大運・流年、易・九星気学・西洋占星術・数秘術を統合して読み解く構成にしています。節入りや起運歳数は簡易近似を強化し、従来版より本格的な命式表示に寄せています。
+        </div>
+        <div class="menu">
+          <button class="btn-secondary" onclick="showSection(&#39;home&#39;)">ホーム</button>
+          <button class="btn-secondary" onclick="showSection(&#39;form&#39;)">鑑定入力</button>
+          <button class="btn-secondary" onclick="showSection(&#39;history&#39;); renderHistory();">鑑定履歴</button>
+          <button class="btn-primary" onclick="showSection(&#39;form&#39;)">鑑定をはじめる</button>
+        </div>
+      </div>
+
+      <div class="wrap">
+        <section id="section-home" class="section active">
+          <div class="lead-cards">
+            <div class="lead-card"><h3>命式</h3><p>年柱・月柱・日柱・時柱、蔵干、日主、五行バランスを表示します。</p></div>
+            <div class="lead-card"><h3>四柱推命強化</h3><p>通変星・十二運・大運・流年まで見られる構成です。</p></div>
+            <div class="lead-card"><h3>複数鑑定モード</h3><p>通常、相性、時期、詳細を切り替えて実務で使えます。</p></div>
+            <div class="lead-card"><h3>実務向け</h3><p>履歴保存、印刷、Instagram申込導線までまとめています。</p></div>
+          </div>
+          <div class="box small">
+            この版は専門ソフト寄りに近づけています。節入り境界と起運歳数は固定値より一段本格寄りの近似計算へ強化していますが、最終的な厳密判定は万年暦系ソフトと照合してください。
+            ただ、占い師専用アプリとしてはかなり強い実用版です。
+          </div>
+          <div class="btn-row">
+            <button class="btn-primary" onclick="showSection(&#39;form&#39;)">専門版鑑定へ進む</button>
+          </div>
+        </section>
+
+        <section id="section-form" class="section">
+          <div class="panel">
+            <h2 class="panel-title">鑑定モードを選択</h2>
+            <div class="mode-cards">
+              <div class="mode-card active" data-mode="normal" onclick="setMode(&#39;normal&#39;, this)"><h3>通常鑑定</h3><p>総合運、恋愛運、仕事運、金運などを読み解きます。</p></div>
+              <div class="mode-card" data-mode="compatibility" onclick="setMode(&#39;compatibility&#39;, this)"><h3>相性鑑定</h3><p>二人の関係性、相性傾向、ご縁の育て方を見ます。</p></div>
+              <div class="mode-card" data-mode="timing" onclick="setMode(&#39;timing&#39;, this)"><h3>時期鑑定</h3><p>今後の流れや転機の時期を中心に見ます。</p></div>
+              <div class="mode-card" data-mode="detailed" onclick="setMode(&#39;detailed&#39;, this)"><h3>詳細鑑定</h3><p>宿命・課題・転機まで厚く読み解きます。</p></div>
+            </div>
+          </div>
+
+          <div class="grid grid-2" style="margin-top:18px;">
+            <div class="panel">
+              <h2 class="panel-title">ご本人情報</h2>
+              <div class="field"><label for="clientName">お名前</label><input id="clientName" type="text" placeholder="例：山田 花子"></div>
+              <div class="field"><label for="furigana">ふりがな</label><input id="furigana" type="text" placeholder="例：やまだ はなこ"></div>
+              <div class="field"><label for="gender">性別</label>
+                <select id="gender"><option value="">選択してください</option><option>女性</option><option>男性</option><option>その他</option></select>
+              </div>
+              <div class="field"><label for="birthDate">生年月日</label><input id="birthDate" type="date"></div>
+              <div class="field"><label for="birthTime">出生時間</label><input id="birthTime" type="time"></div>
+              <div class="field"><label for="birthPlace">出生地</label><input id="birthPlace" type="text" placeholder="例：大阪府大阪市"></div>
+            </div>
+
+            <div class="panel">
+              <h2 class="panel-title">ご相談内容</h2>
+              <div class="field"><label for="category">鑑定カテゴリ</label>
+                <select id="category">
+                  <option value="">選択してください</option>
+                  <option>総合運</option><option>恋愛運</option><option>仕事運</option><option>金運</option>
+                  <option>相性</option><option>家庭運</option><option>健康運</option><option>年運・月運</option>
+                </select>
+              </div>
+              <div class="field"><label for="consultation">相談内容</label><textarea id="consultation" placeholder="例：恋愛の流れ、仕事の転機、二人の相性、転職時期など"></textarea></div>
+              <div class="field"><label for="memo">占い師メモ</label><textarea id="memo" placeholder="対面時の印象、観察事項、補足メモなど"></textarea></div>
+            </div>
+          </div>
+
+          <div id="partnerSection" class="panel hidden" style="margin-top:18px;">
+            <h2 class="panel-title">お相手情報（相性鑑定用）</h2>
+            <div class="grid grid-2">
+              <div>
+                <div class="field"><label for="partnerName">お相手のお名前</label><input id="partnerName" type="text" placeholder="例：田中 太郎"></div>
+                <div class="field"><label for="partnerGender">お相手の性別</label>
+                  <select id="partnerGender"><option value="">選択してください</option><option>女性</option><option>男性</option><option>その他</option></select>
+                </div>
+              </div>
+              <div>
+                <div class="field"><label for="partnerBirthDate">お相手の生年月日</label><input id="partnerBirthDate" type="date"></div>
+                <div class="field"><label for="partnerMemo">関係性メモ</label><textarea id="partnerMemo" placeholder="例：現在の関係、気になること、距離感など"></textarea></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-top:18px;">
+            <h2 class="panel-title">使用する占術</h2>
+            <div class="check-grid">
+              <label class="check-item"><input type="checkbox" class="fortune-check" value="四柱推命" checked=""> 四柱推命</label>
+              <label class="check-item"><input type="checkbox" class="fortune-check" value="易" checked=""> 易</label>
+              <label class="check-item"><input type="checkbox" class="fortune-check" value="九星気学" checked=""> 九星気学</label>
+              <label class="check-item"><input type="checkbox" class="fortune-check" value="西洋占星術" checked=""> 西洋占星術</label>
+              <label class="check-item"><input type="checkbox" class="fortune-check" value="数秘術" checked=""> 数秘術</label>
+            </div>
+            <div class="btn-row">
+              <button class="btn-primary" onclick="generateReading()">専門版鑑定を開始する</button>
+              <button class="btn-secondary" onclick="clearForm()">入力内容をクリア</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-result" class="section">
+          <div class="panel">
+            <h2 class="panel-title">鑑定結果</h2>
+            <div id="resultMeta" class="box meta-text"></div>
+            <div id="pillarsArea"></div>
+            <div id="advancedSajuArea"></div>
+            <div id="yearLuckArea"></div>
+            <div id="monthLuckArea"></div>
+            <div id="compatibilityArea"></div>
+            <div id="reportArea"></div>
+            <div id="summaryLine" class="box summary-box"></div>
+            <div id="logicBlocks"></div>
+            <div id="resultBlocks"></div>
+            <div class="box">さらに詳しいご相談や継続的な鑑定をご希望の方は、Instagramよりお申し込みいただけます。</div>
+            <div class="panel" style="margin-top:18px; padding:16px;">
+              <h3 class="panel-title">占い師コメント追記</h3>
+              <textarea id="teacherComment" placeholder="先生ご自身の最終助言を追記してください。"></textarea>
+              <div class="btn-row">
+                <button class="btn-primary" onclick="saveCurrentReading()">鑑定履歴に保存する</button>
+                <button class="btn-secondary" onclick="window.print()">印刷する</button>
+                <button class="btn-secondary" onclick="showSection(&#39;form&#39;)">入力画面へ戻る</button>
+                <button class="btn-accent" onclick="copyReportText()">鑑定書をコピー</button>
+                <a class="insta-btn" href="https://www.instagram.com/moahetonghuishe?igsh=MW84cmpldGR5cmxxeQ%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener noreferrer">Instagramで申し込む</a>
+              </div>
+            </div>
+            <div class="footer-note">今回の版では流月と相性比較表まで追加しています。さらに精密にする場合は、節入り厳密計算、起運歳数の精密算出、合冲刑害の拡張、真太陽時対応が次の段階です。</div>
+          </div>
+        </section>
+
+        <section id="section-history" class="section">
+          <div class="panel">
+            <h2 class="panel-title">鑑定履歴</h2>
+            <div id="historyList"></div>
+            <div class="btn-row">
+              <button class="btn-secondary" onclick="showSection(&#39;form&#39;)">新しい鑑定へ</button>
+              <button class="btn-danger" onclick="clearHistory()">履歴を削除する</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    const SOLAR_TERM_BOUNDARIES = [
+      { key: '立春', month: 2, day: 4, branch: '寅' },
+      { key: '啓蟄', month: 3, day: 6, branch: '卯' },
+      { key: '清明', month: 4, day: 5, branch: '辰' },
+      { key: '立夏', month: 5, day: 6, branch: '巳' },
+      { key: '芒種', month: 6, day: 6, branch: '午' },
+      { key: '小暑', month: 7, day: 7, branch: '未' },
+      { key: '立秋', month: 8, day: 8, branch: '申' },
+      { key: '白露', month: 9, day: 8, branch: '酉' },
+      { key: '寒露', month: 10, day: 8, branch: '戌' },
+      { key: '立冬', month: 11, day: 7, branch: '亥' },
+      { key: '大雪', month: 12, day: 7, branch: '子' },
+      { key: '小寒', month: 1, day: 6, branch: '丑' }
+    ];
+
+    function makeDate(y,m,d){ return new Date(y, m-1, d, 12, 0, 0); }
+
+    function getMajorSolarTermsForYear(year){
+      return SOLAR_TERM_BOUNDARIES.map(item => {
+        const y = item.month === 1 ? year + 1 : year;
+        return { ...item, date: makeDate(y, item.month, item.day) };
+      });
+    }
+
+    function getMonthBoundary(dateObj){
+      const y = dateObj.getFullYear();
+      const terms = [
+        ...getMajorSolarTermsForYear(y-1),
+        ...getMajorSolarTermsForYear(y),
+      ].sort((a,b)=>a.date-b.date);
+      let current = terms[0];
+      for (const t of terms){ if(dateObj >= t.date) current=t; else break; }
+      return current;
+    }
+
+    function daysBetween(a,b){ return Math.round((b-a)/(1000*60*60*24)); }
+
+    const HIDDEN_STEMS = {
+      "子": ["癸"], "丑": ["己", "癸", "辛"], "寅": ["甲", "丙", "戊"], "卯": ["乙"],
+      "辰": ["戊", "乙", "癸"], "巳": ["丙", "庚", "戊"], "午": ["丁", "己"], "未": ["己", "丁", "乙"],
+      "申": ["庚", "壬", "戊"], "酉": ["辛"], "戌": ["戊", "辛", "丁"], "亥": ["壬", "甲"]
+    };
+
+    
+    const BRANCH_RELATIONS = {
+      六合: { '子':'丑','丑':'子','寅':'亥','亥':'寅','卯':'戌','戌':'卯','辰':'酉','酉':'辰','巳':'申','申':'巳','午':'未','未':'午' },
+      冲: { '子':'午','午':'子','丑':'未','未':'丑','寅':'申','申':'寅','卯':'酉','酉':'卯','辰':'戌','戌':'辰','巳':'亥','亥':'巳' },
+      害: { '子':'未','未':'子','丑':'午','午':'丑','寅':'巳','巳':'寅','卯':'辰','辰':'卯','申':'亥','亥':'申','酉':'戌','戌':'酉' },
+      刑: { '子':'卯','卯':'子','寅':'巳','巳':'申','申':'寅','丑':'戌','戌':'未','未':'丑','辰':'辰','午':'午','酉':'酉','亥':'亥' }
+    };
+
+    function getBranchRelation(a, b) {
+      if (!a || !b) return '—';
+      const out = [];
+      for (const [name, mapping] of Object.entries(BRANCH_RELATIONS)) {
+        if (mapping[a] === b) out.push(name);
+      }
+      return out.length ? out.join('・') : '関係薄め';
+    }
+
+    function buildMonthLuck(baseYear, baseMonth, pillars, count = 12) {
+      const list = [];
+      let y = baseYear;
+      let m = baseMonth;
+      for (let i = 0; i < count; i++) {
+        const d = new Date(y, m - 1, 15);
+        const boundary = getMonthBoundary(d);
+        const yearP = getYearPillar(d.getFullYear(), d.getMonth()+1, 15);
+        const monthStem = getMonthStem(yearP.stem, boundary.branch);
+        const pillar = { stem: monthStem, branch: boundary.branch, text: monthStem + boundary.branch };
+        list.push({
+          year: y,
+          month: m,
+          pillar: pillar.text,
+          tsuhen: getTsuhen(pillars.dayMaster, pillar.stem),
+          twelve: getTwelveFortune(pillars.dayMaster, pillar.branch)
+        });
+        m += 1;
+        if (m > 12) { m = 1; y += 1; }
+      }
+      return list;
+    }
+
+    function renderMonthLuckArea(person) {
+      const now = new Date();
+      const list = buildMonthLuck(now.getFullYear(), now.getMonth() + 1, person.pillars, 12);
+      document.getElementById('monthLuckArea').innerHTML = `
+        <div class="advanced-box">
+          <h3 class="panel-title">流月（簡易）</h3>
+          <div class="month-grid">
+            ${list.map(item => `
+              <div class="month-card">
+                <h3>${item.year}年${item.month}月</h3>
+                <p>${item.pillar}
+${item.tsuhen || '—'}
+${item.twelve || '—'}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCompatibilityMatrixArea(person, partner) {
+      if (!partner || currentMode !== 'compatibility') {
+        document.getElementById('compatibilityArea').innerHTML = '';
+        return;
+      }
+      const rows = [
+        ['日主', person.pillars.dayMaster + '（' + person.pillars.dayMasterElement + '）', partner.pillars.dayMaster + '（' + partner.pillars.dayMasterElement + '）', person.pillars.dayMasterElement === partner.pillars.dayMasterElement ? '同質' : '補完'],
+        ['年支', person.pillars.yearPillar.branch, partner.pillars.yearPillar.branch, getBranchRelation(person.pillars.yearPillar.branch, partner.pillars.yearPillar.branch)],
+        ['月支', person.pillars.monthPillar.branch, partner.pillars.monthPillar.branch, getBranchRelation(person.pillars.monthPillar.branch, partner.pillars.monthPillar.branch)],
+        ['日支', person.pillars.dayPillar.branch, partner.pillars.dayPillar.branch, getBranchRelation(person.pillars.dayPillar.branch, partner.pillars.dayPillar.branch)],
+        ['星座', person.zodiac, partner.zodiac, person.zodiac === partner.zodiac ? '同質' : '別質'],
+        ['数秘', String(person.lifePath), String(partner.lifePath), person.lifePath === partner.lifePath ? '共鳴' : '刺激']
+      ];
+      document.getElementById('compatibilityArea').innerHTML = `
+        <div class="advanced-box">
+          <h3 class="panel-title">相性比較表</h3>
+          <div class="compat-grid">
+            ${rows.map(r => `
+              <div class="compat-card">
+                <h3>${r[0]}</h3>
+                <p>${person.name}様：${r[1]}
+${partner.name}様：${r[2]}
+判定：${r[3]}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCompatibilityArea(person, partner) {
+      if (!partner || currentMode !== 'compatibility') return;
+      const relationTexts = [
+        `年支関係：${getBranchRelation(person.pillars.yearPillar.branch, partner.pillars.yearPillar.branch)}`,
+        `月支関係：${getBranchRelation(person.pillars.monthPillar.branch, partner.pillars.monthPillar.branch)}`,
+        `日支関係：${getBranchRelation(person.pillars.dayPillar.branch, partner.pillars.dayPillar.branch)}`
+      ];
+      const extra = document.createElement('div');
+      extra.className = 'logic-box';
+      extra.innerHTML = `<h3>支の関係</h3><p>${relationTexts.join('\n')}</p>`;
+      document.getElementById('logicBlocks').appendChild(extra);
+    }
+
+    function renderReportArea(metaLines, summary, logicBlocks, resultData) {
+      const keyLogic = logicBlocks.slice(0, 3).map(v => `【${v.title}】\n${v.text}`).join('\n\n');
+      const keyResults = resultData.map(v => `【${v.title}】\n${v.text}`).join('\n\n');
+      const reportText = `${metaLines}\n\n【総括】\n${summary}\n\n${keyLogic}\n\n${keyResults}`;
+      document.getElementById('reportArea').innerHTML = `
+        <div class="advanced-box">
+          <h3 class="panel-title">鑑定書プレビュー</h3>
+          <div class="report-grid">
+            <div class="report-card"><h3>要点</h3><p>${summary}</p></div>
+            <div class="report-card"><h3>保存用メモ</h3><p>${metaLines}</p></div>
+          </div>
+          <div class="report-card" style="margin-top:14px;"><h3>鑑定書本文</h3><p id="reportTextBlock"></p></div>
+        </div>
+      `;
+      document.getElementById('reportTextBlock').textContent = reportText;
+      window.__fortuneReportText = reportText;
+    }
+
+    function copyReportText() {
+      const text = window.__fortuneReportText || '';
+      if (!text) { alert('コピーする鑑定書がありません。'); return; }
+      navigator.clipboard.writeText(text).then(() => alert('鑑定書をコピーしました。')).catch(() => alert('コピーに失敗しました。'));
+    }
+
+function buildYearLuck(currentYear, pillars, years = 10) {
+      const list = [];
+      for (let i = -2; i <= years - 3; i++) {
+        const y = currentYear + i;
+        const yP = getYearPillar(y, 6, 15);
+        list.push({
+          year: y,
+          pillar: yP.text,
+          tsuhen: getTsuhen(pillars.dayMaster, yP.stem),
+          twelve: getTwelveFortune(pillars.dayMaster, yP.branch)
+        });
+      }
+      return list;
+    }
+
+    function renderYearLuckArea(person) {
+      const currentYear = new Date().getFullYear();
+      const list = buildYearLuck(currentYear, person.pillars, 10);
+      document.getElementById('yearLuckArea').innerHTML = `
+        <div class="advanced-box">
+          <h3 class="panel-title">流年（簡易）</h3>
+          <div class="year-grid">
+            ${list.map(item => `
+              <div class="year-card">
+                <h3>${item.year}年</h3>
+                <p>${item.pillar}\n${item.tsuhen || '—'}\n${item.twelve || '—'}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderPillarsArea(person) {
+      const p = person.pillars;
+      const counts = p.elementCounts;
+      document.getElementById('pillarsArea').innerHTML = `
+        <div class="pillbox">
+          <h3 class="panel-title">四柱推命 命式</h3>
+          <div class="pillars-grid">
+            ${renderPillarCard('年柱', p.yearPillar, p.dayMaster)}
+            ${renderPillarCard('月柱', p.monthPillar, p.dayMaster)}
+            ${renderPillarCard('日柱', p.dayPillar, p.dayMaster)}
+            ${renderPillarCard('時柱', p.hourPillar, p.dayMaster)}
+          </div>
+        </div>
+        <div class="pillbox">
+          <h3 class="panel-title">五行バランス</h3>
+          <div class="mini-grid">
+            <div class="mini-card"><h3>木</h3><p>${counts['木']}</p></div>
+            <div class="mini-card"><h3>火</h3><p>${counts['火']}</p></div>
+            <div class="mini-card"><h3>土</h3><p>${counts['土']}</p></div>
+            <div class="mini-card"><h3>金</h3><p>${counts['金']}</p></div>
+            <div class="mini-card"><h3>水</h3><p>${counts['水']}</p></div>
+          </div>
+          <div class="small" style="margin-top:10px;">日主：${p.dayMaster}（${p.dayMasterElement}）</div>
+        </div>
+      `;
+    }
+
+    function renderPillarCard(title, pillar, dayStem = '') {
+      const hiddenDetail = (pillar.hidden || []).map(st => dayStem ? `${st}(${getTsuhen(dayStem, st) || '—'})` : st).join('・');
+      return `
+        <div class="pill-card">
+          <h3>${title}</h3>
+          <p>${pillar.text}\n蔵干：${hiddenDetail}</p>
+        </div>
+      `;
+    }
+
+    function renderAdvancedSajuArea(person, gender) {
+      const p = person.pillars;
+      const dayStem = p.dayMaster;
+      const yearTsuhen = getTsuhen(dayStem, p.yearPillar.stem);
+      const monthTsuhen = getTsuhen(dayStem, p.monthPillar.stem);
+      const hourTsuhen = getTsuhen(dayStem, p.hourPillar.stem);
+      const yearFortune = getTwelveFortune(dayStem, p.yearPillar.branch);
+      const monthFortune = getTwelveFortune(dayStem, p.monthPillar.branch);
+      const dayFortune = getTwelveFortune(dayStem, p.dayPillar.branch);
+      const hourFortune = getTwelveFortune(dayStem, p.hourPillar.branch);
+      const daiun = buildDaiun(p.monthPillar, p.yearPillar.stem, gender, person.year, `${person.year}-${String(person.month).padStart(2,'0')}-${String(person.day).padStart(2,'0')}`);
+      document.getElementById('advancedSajuArea').innerHTML = `
+        <div class="advanced-box">
+          <h3 class="panel-title">通変星</h3>
+          <div class="advanced-grid">
+            <div class="advanced-card"><h3>年柱</h3><p>${yearTsuhen || '—'}</p></div>
+            <div class="advanced-card"><h3>月柱</h3><p>${monthTsuhen || '—'}</p></div>
+            <div class="advanced-card"><h3>日柱</h3><p>日主</p></div>
+            <div class="advanced-card"><h3>時柱</h3><p>${hourTsuhen || '—'}</p></div>
+          </div>
+        </div>
+        <div class="advanced-box">
+          <h3 class="panel-title">十二運</h3>
+          <div class="advanced-grid">
+            <div class="advanced-card"><h3>年柱</h3><p>${yearFortune || '—'}</p></div>
+            <div class="advanced-card"><h3>月柱</h3><p>${monthFortune || '—'}</p></div>
+            <div class="advanced-card"><h3>日柱</h3><p>${dayFortune || '—'}</p></div>
+            <div class="advanced-card"><h3>時柱</h3><p>${hourFortune || '—'}</p></div>
+          </div>
+        </div>
+        <div class="advanced-box">
+          <h3 class="panel-title">大運（簡易）</h3>
+          <div class="small" style="margin-bottom:10px;">進み方：${daiun.direction} ／ 起運歳数の近似計算：${daiun.startAge}歳 ／ 基準節気：${daiun.referenceTerm} ／ 日数差：約${daiun.diffDays}日</div>
+          <div class="daiun-grid">
+            ${daiun.list.map(item => `
+              <div class="advanced-card">
+                <h3>${item.age}歳〜${item.endAge}歳</h3>
+                <p>${item.pillar}\n${item.yearRange}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function getHourBranch(hour) {
+      const branches = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+      const index = Math.floor(((hour + 1) % 24) / 2);
+      return branches[index];
+    }
+
+    function getHourStem(dayStem, hourBranch) {
+      const startStemMap = {
+        "甲":"甲","己":"甲",
+        "乙":"丙","庚":"丙",
+        "丙":"戊","辛":"戊",
+        "丁":"庚","壬":"庚",
+        "戊":"壬","癸":"壬"
+      };
+      const order = { "子":0,"丑":1,"寅":2,"卯":3,"辰":4,"巳":5,"午":6,"未":7,"申":8,"酉":9,"戌":10,"亥":11 };
+      const start = startStemMap[dayStem];
+      const idx = STEMS.indexOf(start);
+      return STEMS[(idx + order[hourBranch]) % 10];
+    }
+
+function getTsuhen(dayStem, targetStem) {
+      const dayInfo = STEM_INFO[dayStem];
+      const targetInfo = STEM_INFO[targetStem];
+      if (!dayInfo || !targetInfo) return "";
+      const samePolarity = dayInfo.yang === targetInfo.yang;
+      if (dayInfo.element === targetInfo.element) return samePolarity ? "比肩" : "劫財";
+      if (elementProduces(dayInfo.element, targetInfo.element)) return samePolarity ? "食神" : "傷官";
+      if (elementControls(dayInfo.element, targetInfo.element)) return samePolarity ? "偏財" : "正財";
+      if (elementControls(targetInfo.element, dayInfo.element)) return samePolarity ? "偏官" : "正官";
+      if (elementProduces(targetInfo.element, dayInfo.element)) return samePolarity ? "偏印" : "印綬";
+      return "";
+    }
+
+    function getTwelveFortune(dayStem, branch) {
+      const list = TWELVE_FORTUNE[dayStem] || [];
+      const found = list.find(v => v.startsWith(branch + ":"));
+      return found ? found.split(":")[1] : "";
+    }
+
+function buildDaiun(monthPillar, yearStem, gender, birthYear, birthDateStr) {
+      const direction = getLuckDirection(yearStem, gender);
+      const birthDate = birthDateStr ? new Date(birthDateStr + 'T12:00:00') : makeDate(birthYear, 6, 15);
+      const terms = [...getMajorSolarTermsForYear(birthDate.getFullYear()-1), ...getMajorSolarTermsForYear(birthDate.getFullYear()), ...getMajorSolarTermsForYear(birthDate.getFullYear()+1)].sort((a,b)=>a.date-b.date);
+      let prev = terms[0], next = terms[terms.length-1];
+      for (const t of terms){
+        if (t.date <= birthDate) prev = t;
+        if (t.date > birthDate){ next = t; break; }
+      }
+      const diffDays = direction === '順行' ? Math.max(1, daysBetween(birthDate, next.date)) : Math.max(1, daysBetween(prev.date, birthDate));
+      const startAge = Math.max(1, Math.round(diffDays / 3));
+      const list = [];
+      let current = { stem: monthPillar.stem, branch: monthPillar.branch };
+      for (let i = 0; i < 8; i++) {
+        current = direction === "順行" ? nextStemBranch(current.stem, current.branch, 1) : prevStemBranch(current.stem, current.branch, 1);
+        list.push({ age: startAge + i * 10, endAge: startAge + i * 10 + 9, pillar: current.stem + current.branch, yearRange: `${birthYear + startAge + i * 10}〜${birthYear + startAge + i * 10 + 9}` });
+      }
+      return { direction, startAge, list, referenceTerm: direction === '順行' ? next.key : prev.key, diffDays };
+    }
+
+function buildPillars(birthDate, birthTime) {
+      const [year, month, day] = birthDate.split('-').map(Number);
+      const hour = birthTime ? Number(birthTime.split(':')[0]) : 12;
+      const yearPillar = getYearPillar(year, month, day);
+      const monthBranch = getMonthBranch(month, day, year);
+      const monthStem = getMonthStem(yearPillar.stem, monthBranch);
+      const monthPillar = { stem: monthStem, branch: monthBranch, text: monthStem + monthBranch };
+      const dayPillar = getDayPillar(year, month, day);
+      const hourBranch = getHourBranch(hour);
+      const hourStem = getHourStem(dayPillar.stem, hourBranch);
+      const hourPillar = { stem: hourStem, branch: hourBranch, text: hourStem + hourBranch };
+
+      [yearPillar, monthPillar, dayPillar, hourPillar].forEach(p => { p.hidden = HIDDEN_STEMS[p.branch] || []; });
+
+      const elements = [yearPillar.stem, monthPillar.stem, dayPillar.stem, hourPillar.stem].map(getFiveElementFromStem);
+      const counts = { 木:0, 火:0, 土:0, 金:0, 水:0 };
+      elements.forEach(e => { if (counts[e] !== undefined) counts[e]++; });
+      return {
+        yearPillar, monthPillar, dayPillar, hourPillar,
+        dayMaster: dayPillar.stem,
+        dayMasterElement: getFiveElementFromStem(dayPillar.stem),
+        elementCounts: counts
+      };
+    }
+
+    function buildPersonData(name, birthDate, birthTime) {
+      if (!birthDate) return null;
+      const [year, month, day] = birthDate.split('-').map(Number);
+      const zodiac = getWesternZodiac(month, day);
+      const lifePath = getLifePathNumber(birthDate);
+      const pillars = buildPillars(birthDate, birthTime || '12:00');
+      const nineStarNum = getNineStarNumber(year);
+      return {
+        name, year, month, day, zodiac, lifePath, pillars,
+        nineStarName: getNineStarName(nineStarNum),
+        elementMsg: getElementInterpretation(pillars.dayMasterElement)
+      };
+    }
+
+    function generateReading() {
+      const clientName = document.getElementById('clientName').value.trim();
+      const furigana = document.getElementById('furigana').value.trim();
+      const gender = document.getElementById('gender').value;
+      const birthDate = document.getElementById('birthDate').value;
+      const birthTime = document.getElementById('birthTime').value;
+      const birthPlace = document.getElementById('birthPlace').value.trim();
+      const category = document.getElementById('category').value;
+      const consultation = document.getElementById('consultation').value.trim();
+      const memo = document.getElementById('memo').value.trim();
+      const partnerName = document.getElementById('partnerName').value.trim();
+      const partnerGender = document.getElementById('partnerGender').value;
+      const partnerBirthDate = document.getElementById('partnerBirthDate').value;
+      const partnerMemo = document.getElementById('partnerMemo').value.trim();
+      const fortunes = getSelectedFortunes();
+
+      if (!clientName) return alert('お名前をご入力ください。');
+      if (!birthDate) return alert('生年月日をご入力ください。');
+      if (!category) return alert('鑑定カテゴリをお選びください。');
+      if (!fortunes.length) return alert('占術を1つ以上選択してください。');
+      if (currentMode === 'compatibility' && (!partnerName || !partnerBirthDate)) {
+        return alert('相性鑑定ではお相手のお名前と生年月日が必要です。');
+      }
+
+      const person = buildPersonData(clientName, birthDate, birthTime);
+      const partner = currentMode === 'compatibility' ? buildPersonData(partnerName, partnerBirthDate, '') : null;
+      const iching = generateIChingHexagram(clientName + birthDate + category + consultation + currentMode);
+      const seed = person.year + person.month + person.day + consultation.length + currentMode.length;
+
+      renderPillarsArea(person);
+      renderAdvancedSajuArea(person, gender);
+      renderAnnualLuckArea(person);
+      renderMonthlyLuckArea(person);
+      renderCompatibilityMatrixArea(person, partner);
+      renderYearLuckArea(person);
+      renderMonthLuckArea(person);
+      renderCompatibilityArea(person, partner);
+
+      const essenceMessages = [
+        `${clientName}様は、外側には穏やかさを保ちながら、内面にはしっかりとした意志と責任感を宿している方です。`,
+        `${clientName}様は、慎重さの中に確かな直感を持ち、軽く流されず本質を見極めようとする傾向があります。`,
+        `${clientName}様は、人に合わせる柔らかさを持ちながらも、人生の要所では自分の軸を大切にする力があります。`
+      ];
+      const flowMessages = [
+        '今は無理に答えを急ぐより、状況を整えながら進めることで自然に運がひらく流れです。',
+        '表面的には停滞に見えても、内側では次の運の準備が静かに整ってきています。',
+        '焦りよりも見極めを優先することで、今後の流れが安定しやすい時期に入っています。'
+      ];
+      const loveMessages = [
+        '恋愛面では、受け身になりすぎず、素直な気持ちを丁寧に表現することがご縁を育てる鍵になります。',
+        '相手に合わせるだけでなく、ご自身の本音を大切にすることで関係性が安定しやすくなります。',
+        '急展開よりも、信頼の積み重ねによって関係が深まりやすい流れです。'
+      ];
+      const workMessages = [
+        '仕事運では、積み上げた信用と実務力が評価につながりやすい流れです。',
+        '自分の判断軸を明確にするほど、迷いが減り仕事の運も整いやすくなります。',
+        '派手な勝負より、継続と誠実さが大きな実りへ結びつきやすい時です。'
+      ];
+      const moneyMessages = [
+        '金運は一気に増やすより、着実に整えて守ることで安定しやすい相です。',
+        'お金の流れを整理することが、今後の安心感と実りにつながりやすくなります。',
+        '短期の損得より、長く続く安定を意識することで金運が育ちやすくなります。'
+      ];
+      const adviceMessages = [
+        '今必要なのは、焦って前へ押し進めることではなく、本当に望む形を見定めることです。',
+        '不要な迷い、人間関係、環境を整えることで、新しい運が入りやすくなります。',
+        '運命は固定されたものではなく、日々の選択によって静かにひらいていくものです。',
+        '静かな時期ほど運の根が育ちます。整えることが、結果として最も大きな前進になります。'
+      ];
+
+      const categoryMessageMap = {
+        '総合運':'全体運としては、流れを整えながら次の段階へ進む転換点が示されています。',
+        '恋愛運':'恋愛面では、感情の伝え方と距離感の取り方が運気を左右しやすい時です。',
+        '仕事運':'仕事面では、積み上げてきた経験が形になりやすく、信頼が実りにつながる流れです。',
+        '金運':'金運では、守りと整えを意識するほど安定感が高まりやすくなります。',
+        '相性':'相性面では、表面的な好みだけでなく価値観の深い部分を見る必要があります。',
+        '家庭運':'家庭運では、安心感のある言葉と関わり方が流れを整える鍵になります。',
+        '健康運':'健康運では、無理を重ねるより生活の流れそのものを整えることが重要です。',
+        '年運・月運':'時期運では、今後数か月の選択が長い流れに影響しやすい時期です。'
+      };
+
+      const logicBlocks = [];
+      if (fortunes.includes('四柱推命')) {
+        logicBlocks.push({
+          title:'四柱推命からの読み解き',
+          text:
+            `${clientName}様の命式は 年柱 ${person.pillars.yearPillar.text}、月柱 ${person.pillars.monthPillar.text}、日柱 ${person.pillars.dayPillar.text}、時柱 ${person.pillars.hourPillar.text} です。\n` +
+            `日主は ${person.pillars.dayMaster}（${person.pillars.dayMasterElement}）で、${person.elementMsg}\n` +
+            `蔵干・通変星・十二運・大運の流れを見ると、表面的な器用さよりも、内面の成熟とタイミングの見極めによって運を育てていく傾向が強く表れています。`
+        });
+      }
+      if (fortunes.includes('九星気学')) {
+        logicBlocks.push({ title:'九星気学からの読み解き', text:`${clientName}様の本命星の簡易判定は ${person.nineStarName} です。\n勢いだけで進むより、時期を見極めながら動くほど運気が安定しやすい相です。` });
+      }
+      if (fortunes.includes('西洋占星術')) {
+        logicBlocks.push({ title:'西洋占星術からの読み解き', text:`${clientName}様の太陽星座は ${person.zodiac} です。\n${person.zodiac}らしい感受性や対人のリズムを尊重するほど、本来の魅力が発揮されやすくなります。` });
+      }
+      if (fortunes.includes('数秘術')) {
+        logicBlocks.push({ title:'数秘術からの読み解き', text:`${clientName}様のライフパスナンバーは ${person.lifePath} です。\n${getNumerologyMessage(person.lifePath)}` });
+      }
+      if (fortunes.includes('易')) {
+        logicBlocks.push({ title:'易からの読み解き', text:`今回の卦は 第${iching.no}卦「${iching.name}」です。\n${iching.msg}` });
+      }
+      if (currentMode === 'compatibility' && partner) {
+        const sameElement = person.pillars.dayMasterElement === partner.pillars.dayMasterElement;
+        const sameLifePath = person.lifePath === partner.lifePath;
+        const sameZodiac = person.zodiac === partner.zodiac;
+        const relationText = (sameElement || sameLifePath || sameZodiac)
+          ? 'お二人は根本的な感覚が通じやすく、価値観の重なりを持ちやすい関係性です。'
+          : 'お二人は異なる性質を持つ分、相手の違いを理解できると強い補完関係になりやすい相性です。';
+        logicBlocks.push({
+          title:'相性鑑定の読み解き',
+          text:
+            `${clientName}様の日主は ${person.pillars.dayMaster}（${person.pillars.dayMasterElement}）、${partner.name}様の日主は ${partner.pillars.dayMaster}（${partner.pillars.dayMasterElement}）です。\n` +
+            `${relationText}\n` +
+            `ご本人は ${person.zodiac}・${person.lifePath}、お相手は ${partner.zodiac}・${partner.lifePath} の流れを持っており、関係の深まり方にも独自のテンポがあります。`
+        });
+      }
+
+      const summaryBase = `${clientName}様の今回の鑑定では、${pick(essenceMessages, seed)} ${pick(flowMessages, seed + 1)} ${categoryMessageMap[category] || '今は流れを丁寧に整えることが重要な時です。'}`;
+      let summary = summaryBase;
+      let resultData = [];
+
+      if (currentMode === 'normal') {
+        const categoryDetail =
+          category === '恋愛運' || category === '相性' ? pick(loveMessages, seed) :
+          category === '仕事運' ? pick(workMessages, seed) :
+          category === '金運' ? pick(moneyMessages, seed) :
+          pick([pick(loveMessages, seed), pick(workMessages, seed), pick(moneyMessages, seed)], seed);
+        summary += ' 今は表面的な動きだけでなく、内側の整い方が結果に結びつきやすい時期です。';
+        resultData = [
+          { title:'総合結論', text: summary + "\n\n今は強く押し切るよりも、流れを見ながら必要なものを整えることで、次の扉がひらきやすくなります。" },
+          { title:'本質と宿命', text: pick(essenceMessages, seed + 2) + `\n日主 ${person.pillars.dayMaster}（${person.pillars.dayMasterElement}）の性質が強く、内面を整えるほど人生の質が高まりやすい方です。` },
+          { title:'現在の流れ', text: pick(flowMessages, seed + 3) + `\n易の「${iching.name}」も、今は焦らず時機を見極める重要性を示しています。` },
+          { title:`${category}の見立て`, text: categoryDetail + "\n一足飛びの結果よりも、丁寧な積み重ねが最終的な実りへつながる流れです。" },
+          { title:'開運の助言', text: pick(adviceMessages, seed + 4) + "\n" + pick(adviceMessages, seed + 5) }
+        ];
+      }
+
+      if (currentMode === 'compatibility' && partner) {
+        summary = `${clientName}様と${partner.name}様の相性鑑定では、お互いの違いの中に学びがあり、関係性をどう育てるかによってご縁の深まり方が大きく変わる相です。`;
+        resultData = [
+          { title:'相性の総合結論', text: summary + "\n\n表面的な好みだけでなく、価値観の奥にある安心感や信頼感をどう築くかが関係の鍵になります。" },
+          { title:'お二人の基本相性', text: `${clientName}様の日主は ${person.pillars.dayMaster}（${person.pillars.dayMasterElement}）、${partner.name}様の日主は ${partner.pillars.dayMaster}（${partner.pillars.dayMasterElement}）です。\n似ている部分は自然な安心感につながり、異なる部分は理解が進むほど魅力に変わっていきます。` },
+          { title:'噛み合いやすい点', text:'言葉の選び方や距離感を丁寧にすることで、相手の良さを引き出しやすい関係です。\n急いで結論を出すよりも、信頼の積み重ねが関係性を安定させます。' },
+          { title:'注意すべき点', text:'相手に合わせすぎる、または本音を飲み込みすぎると、心の距離が少しずつ開きやすくなります。\n違いを否定せず、性質の違いとして受け止めることが重要です。' },
+          { title:'ご縁を深める助言', text:'無理に形を急がず、お互いが自然体でいられる時間を重ねることが関係を強めます。\n今は結果を求めるより、関係を育てる姿勢がご縁の質を高めてくれるでしょう。' }
+        ];
+      }
+
+      if (currentMode === 'timing') {
+        summary = `${clientName}様の時期鑑定では、今は運命の流れが静かに切り替わる節目にあり、焦らず順番を見極めることが重要だと示されています。`;
+        resultData = [
+          { title:'時期鑑定の総合結論', text: summary + "\n\n今後の運は、すぐに大きく動くよりも、段階的に形になる流れとして現れやすいでしょう。" },
+          { title:'今後3か月の流れ', text:'足元を整え、現状を見直すことで流れが安定しやすい時期です。\n今は準備や確認が、のちの成果を大きく左右します。' },
+          { title:'今後6か月の流れ', text:'少しずつ運気が前進しやすくなり、停滞感が薄れていく兆しがあります。\nここでの選択は慎重さを持ちつつも、前向きさを失わないことが大切です。' },
+          { title:'今後1年の流れ', text:'一年を通して見ると、整えたものが形となって返ってきやすい流れです。\n焦りよりも持続が、結果として大きな実りへつながるでしょう。' },
+          { title:'動くべきタイミングへの助言', text:'時期を読むうえでは、心が整っているかどうかも重要な要素です。\n周囲に流されず、ご自身の感覚が静かに定まった時が動き出しの合図になりやすいでしょう。' }
+        ];
+      }
+
+      if (currentMode === 'detailed') {
+        summary = `${clientName}様の詳細鑑定では、宿命・本質・現在の流れ・今後の転機が重なり合い、今は人生の質そのものを整え直す意味のある時期に入っていることが示されています。`;
+        resultData = [
+          { title:'詳細鑑定 総合結論', text: summary + "\n\n見た目には小さな変化であっても、内面では大きな転換が始まっているため、今の選択は今後長く影響を及ぼす可能性があります。" },
+          { title:'本質の深層', text:`${clientName}様は ${person.pillars.yearPillar.text}・${person.pillars.monthPillar.text}・${person.pillars.dayPillar.text}・${person.pillars.hourPillar.text} の流れを持ち、日主 ${person.pillars.dayMaster}（${person.pillars.dayMasterElement}）を中心に命式が組まれています。\n${person.elementMsg}` },
+          { title:'宿命と課題', text:`ライフパス${person.lifePath}の意味から見ると、${getNumerologyMessage(person.lifePath)}\n人生では、周囲に応えることとご自身の本音を守ることの両立が課題になりやすいでしょう。` },
+          { title:'現在の運命の流れ', text:`易の「${iching.name}」と現在の相談内容を重ねると、今は答えを急ぐより、状況の意味を深く読み取ることが必要な時です。\nすぐに結果を求めるよりも、土台を整えることが次の展開を安定させます。` },
+          { title:`${category}の詳細読み解き`, text:(category === '恋愛運' ? pick(loveMessages, seed) : category === '仕事運' ? pick(workMessages, seed) : category === '金運' ? pick(moneyMessages, seed) : pick([pick(loveMessages, seed), pick(workMessages, seed), pick(moneyMessages, seed)], seed)) + "\n運の流れは急激な変化よりも、ひとつずつ納得しながら進むことで安定的に開かれていきます。" },
+          { title:'今後の転機', text:'大きな転機は、外から突然やって来るというより、ご自身の内側が整ったときに現実が動き出す形で表れやすいでしょう。\nそのため、今は決断力を高める前に、心の中の迷いを丁寧に整理することが重要です。' },
+          { title:'詳細開運助言', text: pick(adviceMessages, seed + 6) + "\n" + pick(adviceMessages, seed + 7) + "\n今の時期に大切なのは、周囲に振り回されることなく、自分の運の呼吸を整えることです。" }
+        ];
+      }
+
+      const metaLines = [
+        `鑑定モード：${modeLabel(currentMode)}`,
+        `お名前：${clientName}様`,
+        furigana ? `ふりがな：${furigana}` : '',
+        gender ? `性別：${gender}` : '',
+        `生年月日：${birthDate}`,
+        birthTime ? `出生時間：${birthTime}` : '',
+        birthPlace ? `出生地：${birthPlace}` : '',
+        `鑑定カテゴリ：${category}`,
+        `使用占術：${fortunes.join('・')}`,
+        consultation ? `ご相談内容：${consultation}` : '',
+        memo ? `占い師メモ：${memo}` : '',
+        currentMode === 'compatibility' && partnerName ? `お相手：${partnerName}様` : '',
+        currentMode === 'compatibility' && partnerGender ? `お相手の性別：${partnerGender}` : '',
+        currentMode === 'compatibility' && partnerBirthDate ? `お相手の生年月日：${partnerBirthDate}` : '',
+        currentMode === 'compatibility' && partnerMemo ? `関係性メモ：${partnerMemo}` : ''
+      ].filter(Boolean).join('\n');
+
+      renderReportArea(metaLines, summary, logicBlocks, resultData);
+
+      currentReading = {
+        currentMode, clientName, furigana, gender, birthDate, birthTime, birthPlace,
+        category, consultation, memo, partnerName, partnerGender, partnerBirthDate, partnerMemo,
+        fortunes, summary, logicBlocks, resultData, pillars: person.pillars, year: person.year,
+        createdAt: new Date().toLocaleString('ja-JP')
+      };
+
+      document.getElementById('resultMeta').textContent = metaLines;
+      document.getElementById('summaryLine').textContent = summary;
+
+      const logicArea = document.getElementById('logicBlocks');
+      logicArea.innerHTML = '';
+      logicBlocks.forEach(block => {
+        const div = document.createElement('div');
+        div.className = 'box';
+        div.innerHTML = `<h3 class="panel-title">${block.title}</h3><div class="result-text">${block.text}</div>`;
+        logicArea.appendChild(div);
+      });
+
+      const resultArea = document.getElementById('resultBlocks');
+      resultArea.innerHTML = '';
+      resultData.forEach(block => {
+        const div = document.createElement('div');
+        div.className = 'box';
+        div.innerHTML = `<h3 class="panel-title">${block.title}</h3><div class="result-text">${block.text}</div>`;
+        resultArea.appendChild(div);
+      });
+
+      document.getElementById('teacherComment').value = '';
+      showSection('result');
+    }
+
+    function saveCurrentReading() {
+      if (!currentReading) return alert('保存する鑑定結果がありません。');
+      const teacherComment = document.getElementById('teacherComment').value.trim();
+      const saved = JSON.parse(localStorage.getItem('fortuneAppProfessionalHistory') || '[]');
+      saved.unshift({ ...currentReading, teacherComment });
+      localStorage.setItem('fortuneAppProfessionalHistory', JSON.stringify(saved));
+      alert('鑑定履歴に保存しました。');
+    }
+
+    function renderHistory() {
+      const saved = JSON.parse(localStorage.getItem('fortuneAppProfessionalHistory') || '[]');
+      const area = document.getElementById('historyList');
+      if (!saved.length) {
+        area.innerHTML = '<div class="small">まだ鑑定履歴はありません。</div>';
+        return;
+      }
+      area.innerHTML = saved.map((item, index) => `
+        <div class="history-item box">
+          <strong>${item.clientName} 様｜${modeLabel(item.currentMode)}｜${item.category}</strong>
+          <div class="small">保存日時：${item.createdAt}</div>
+          <div class="small">使用占術：${item.fortunes.join('・')}</div>
+          <div class="small" style="margin-top:8px;">${item.summary}</div>
+          ${item.pillars ? `<div class="small" style="margin-top:8px;">命式：${item.pillars.yearPillar.text} / ${item.pillars.monthPillar.text} / ${item.pillars.dayPillar.text} / ${item.pillars.hourPillar.text}</div>` : ''}
+          ${item.teacherComment ? `<div class="small" style="margin-top:8px;">占い師コメント：${item.teacherComment}</div>` : ''}
+          <div class="btn-row" style="margin-top:10px;">
+            <button class="btn-secondary" onclick="loadHistory(${index})">呼び出す</button>
+            <button class="btn-danger" onclick="deleteHistoryItem(${index})">削除</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function loadHistory(index) {
+      const saved = JSON.parse(localStorage.getItem('fortuneAppProfessionalHistory') || '[]');
+      const item = saved[index];
+      if (!item) return;
+      currentReading = item;
+      document.getElementById('resultMeta').textContent = [
+        `鑑定モード：${modeLabel(item.currentMode)}`,
+        `お名前：${item.clientName}様`,
+        item.furigana ? `ふりがな：${item.furigana}` : '',
+        item.gender ? `性別：${item.gender}` : '',
+        item.birthDate ? `生年月日：${item.birthDate}` : '',
+        item.birthTime ? `出生時間：${item.birthTime}` : '',
+        item.birthPlace ? `出生地：${item.birthPlace}` : '',
+        `鑑定カテゴリ：${item.category}`,
+        `使用占術：${item.fortunes.join('・')}`,
+        item.consultation ? `ご相談内容：${item.consultation}` : '',
+        item.memo ? `占い師メモ：${item.memo}` : '',
+        item.partnerName ? `お相手：${item.partnerName}様` : '',
+        item.partnerGender ? `お相手の性別：${item.partnerGender}` : '',
+        item.partnerBirthDate ? `お相手の生年月日：${item.partnerBirthDate}` : '',
+        item.partnerMemo ? `関係性メモ：${item.partnerMemo}` : ''
+      ].filter(Boolean).join('\n');
+
+      if (item.pillars) {
+        const personLike = { year: Number((item.birthDate || '2000-01-01').split('-')[0]), pillars: item.pillars, name: item.clientName, zodiac: '', lifePath: '' };
+        if (item.birthDate) {
+          const bp = buildPersonData(item.clientName, item.birthDate, item.birthTime || '');
+          personLike.zodiac = bp.zodiac;
+          personLike.lifePath = bp.lifePath;
+        }
+        renderPillarsArea(personLike);
+        renderAdvancedSajuArea(personLike, item.gender || '');
+        renderYearLuckArea(personLike);
+        renderMonthLuckArea(personLike);
+        document.getElementById('compatibilityArea').innerHTML = '';
+        if (item.partnerName && item.partnerBirthDate) {
+          const partnerLike = buildPersonData(item.partnerName, item.partnerBirthDate, '');
+          renderCompatibilityArea(personLike, partnerLike);
+        }
+      }
+      document.getElementById('summaryLine').textContent = item.summary;
+      document.getElementById('teacherComment').value = item.teacherComment || '';
+      renderReportArea(document.getElementById('resultMeta').textContent, item.summary, item.logicBlocks || [], item.resultData || []);
+
+      const logicArea = document.getElementById('logicBlocks');
+      logicArea.innerHTML = '';
+      (item.logicBlocks || []).forEach(block => {
+        const div = document.createElement('div');
+        div.className = 'box';
+        div.innerHTML = `<h3 class="panel-title">${block.title}</h3><div class="result-text">${block.text}</div>`;
+        logicArea.appendChild(div);
+      });
+
+      const resultArea = document.getElementById('resultBlocks');
+      resultArea.innerHTML = '';
+      (item.resultData || []).forEach(block => {
+        const div = document.createElement('div');
+        div.className = 'box';
+        div.innerHTML = `<h3 class="panel-title">${block.title}</h3><div class="result-text">${block.text}</div>`;
+        resultArea.appendChild(div);
+      });
+
+      showSection('result');
+    }
+
+    function deleteHistoryItem(index) {
+      const saved = JSON.parse(localStorage.getItem('fortuneAppProfessionalHistory') || '[]');
+      saved.splice(index, 1);
+      localStorage.setItem('fortuneAppProfessionalHistory', JSON.stringify(saved));
+      renderHistory();
+    }
+
+    function clearHistory() {
+      if (confirm('鑑定履歴をすべて削除しますか？')) {
+        localStorage.removeItem('fortuneAppProfessionalHistory');
+        renderHistory();
+      }
+    }
+ 
+    function getYearPillar(year, month, day) {
+      const dateObj = makeDate(year, month, day);
+      const lichun = makeDate(year, 2, 4);
+      const adjustedYear = dateObj < lichun ? year - 1 : year;
+      const index = adjustedYear - 1984;
+      return stemBranchByIndex(index);
+    }
+
+    function getMonthBranch(month, day, year) {
+      const dateObj = makeDate(year, month, day);
+      return getMonthBoundary(dateObj).branch;
+    }
+
+    function getMonthStem(yearStem, monthBranch) {
+      const startStemMap = {
+        "甲": "丙", "己": "丙",
+        "乙": "戊", "庚": "戊",
+        "丙": "庚", "辛": "庚",
+        "丁": "壬", "壬": "壬",
+        "戊": "甲", "癸": "甲"
+      };
+      const monthOrder = { "寅":0, "卯":1, "辰":2, "巳":3, "午":4, "未":5, "申":6, "酉":7, "戌":8, "亥":9, "子":10, "丑":11 };
+      const startStem = startStemMap[yearStem];
+      const startIndex = STEMS.indexOf(startStem);
+      return STEMS[(startIndex + monthOrder[monthBranch]) % 10];
+    }
+
+ 
+  </script>
+
+</body></html>
