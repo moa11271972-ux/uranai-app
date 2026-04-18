@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>西洋占い5種 有料アプリ 完全版</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;padding:24px;
+  font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",sans-serif;
+  color:#f7f1e8;
+  background:
+    radial-gradient(circle at top, rgba(255,215,120,.12), transparent 30%),
+    linear-gradient(135deg,#090611 0%,#120b20 35%,#20123a 68%,#08050f 100%);
+}
+.app{
+  max-width:1120px;margin:0 auto;padding:28px;border-radius:28px;
+  background:rgba(18,11,29,.92);
+  border:1px solid rgba(227,191,92,.22);
+  box-shadow:0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05);
+  backdrop-filter: blur(10px);
+}
+h1{
+  margin:0;text-align:center;color:#f1d37c;font-size:34px;letter-spacing:.08em;
+  text-shadow:0 0 14px rgba(227,191,92,.18);
+}
+.subtitle{
+  max-width:820px;margin:12px auto 0;text-align:center;color:#d9ccb0;line-height:1.9;font-size:14px;
+}
+.section-title{
+  margin:28px 0 10px;padding-left:12px;border-left:4px solid rgba(227,191,92,.8);
+  color:#f6de99;font-size:18px;font-weight:700
+}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+input,select,textarea{
+  width:100%;margin-top:10px;padding:14px 16px;border-radius:16px;
+  border:1px solid rgba(227,191,92,.18);background:rgba(255,255,255,.06);color:#fffef8;
+  font-size:15px;outline:none;transition:.2s ease;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)
+}
+input::placeholder,textarea::placeholder{color:#d8cbaa}
+input:focus,select:focus,textarea:focus{
+  border-color:rgba(227,191,92,.5);box-shadow:0 0 0 3px rgba(227,191,92,.1);background:rgba(255,255,255,.08)
+}
+textarea{min-height:130px;resize:vertical;line-height:1.9}
+.mode-grid,.button-row,.report-grid{display:grid;gap:12px}
+.mode-grid{grid-template-columns:repeat(4,1fr);margin-top:12px}
+.mode-card{
+  padding:14px;border-radius:18px;border:1px solid rgba(227,191,92,.16);
+  background:rgba(255,255,255,.04);cursor:pointer;transition:.2s ease
+}
+.mode-card.active{
+  background:linear-gradient(135deg, rgba(227,191,92,.14), rgba(255,255,255,.04));
+  border-color:rgba(227,191,92,.45)
+}
+.mode-card h3{margin:0 0 8px;color:#f1d37c;font-size:16px}
+.mode-card p{margin:0;color:#eadfca;line-height:1.8;font-size:13px}
+.button-row{grid-template-columns:repeat(4,1fr);margin-top:18px}
+button{
+  width:100%;padding:15px 18px;border:none;border-radius:16px;font-size:15px;font-weight:700;
+  letter-spacing:.03em;cursor:pointer;transition:.2s ease
+}
+button:hover,.insta-btn:hover{transform:translateY(-1px)}
+.primary{
+  background:linear-gradient(135deg,#c89e35,#f2db96);color:#2a1a00;box-shadow:0 10px 25px rgba(202,161,58,.18)
+}
+.secondary{
+  background:rgba(255,255,255,.07);color:#fff4d9;border:1px solid rgba(227,191,92,.16)
+}
+.locked{
+  background:linear-gradient(135deg,#6d5877,#8c6c46);color:#fff
+}
+.insta-btn{
+  display:block;width:100%;margin-top:16px;padding:15px 18px;text-align:center;text-decoration:none;border-radius:16px;
+  font-weight:700;color:#fff;background:linear-gradient(135deg,#833ab4,#c13584,#fd1d1d,#fcb045);transition:.2s ease
+}
+.note{margin-top:12px;color:#d8cba8;font-size:13px;line-height:1.8}
+.pill{
+  display:inline-block;padding:8px 12px;border-radius:999px;background:rgba(227,191,92,.1);
+  border:1px solid rgba(227,191,92,.2);color:#f2d780;font-size:13px;margin-top:14px
+}
+.report-wrap{margin-top:28px;display:grid;gap:16px}
+.report-card{
+  padding:22px;border-radius:22px;border:1px solid rgba(227,191,92,.18);
+  background:linear-gradient(135deg, rgba(227,191,92,.07), rgba(255,255,255,.03)), rgba(255,255,255,.04);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03)
+}
+.report-title{margin:0 0 10px;font-size:17px;color:#f1d37c;font-weight:700}
+.report-text{white-space:pre-wrap;line-height:2;color:#f9f3e7;font-size:15px}
+.hidden{display:none}
+.banner{
+  margin-top:18px;padding:16px 18px;border-radius:18px;border:1px solid rgba(227,191,92,.16);
+  background:rgba(255,255,255,.04);color:#f1e7d2;line-height:1.9
+}
+@media (max-width: 920px){
+  body{padding:14px}
+  .app{padding:20px;border-radius:22px}
+  h1{font-size:28px}
+  .row,.mode-grid,.button-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>西洋占い5種 有料アプリ 完全版</h1>
+  <div class="subtitle">西洋占星術・タロット・ルノルマン・数秘術・ルーンを統合し、無料版プレビューと有料版の物語鑑定を分けて表示する完全版です。</div>
+
+  <div class="pill" id="planLabel">現在：無料版プレビュー</div>
+
+  <div class="section-title">鑑定モード</div>
+  <div class="mode-grid">
+    <div class="mode-card active" data-mode="general" onclick="setMode('general', this)">
+      <h3>総合</h3><p>人生全体の流れ、本質、転機を多層で読みます。</p>
+    </div>
+    <div class="mode-card" data-mode="love" onclick="setMode('love', this)">
+      <h3>恋愛</h3><p>気持ち、距離感、今後の変化を重視して読みます。</p>
+    </div>
+    <div class="mode-card" data-mode="work" onclick="setMode('work', this)">
+      <h3>仕事</h3><p>適職、タイミング、動き方を中心に読みます。</p>
+    </div>
+    <div class="mode-card" data-mode="money" onclick="setMode('money', this)">
+      <h3>金運</h3><p>流れ、守り方、伸ばし方を中心に読みます。</p>
+    </div>
+  </div>
+
+  <div class="section-title">ご本人情報</div>
+  <input id="name" placeholder="お名前" />
+  <div class="row">
+    <input id="birth" type="date" />
+    <input id="birthTime" type="time" />
+  </div>
+
+  <div class="section-title">お相手情報（相性鑑定用）</div>
+  <input id="partnerName" placeholder="お相手のお名前" />
+  <div class="row">
+    <input id="partnerBirth" type="date" />
+    <input id="partnerBirthTime" type="time" />
+  </div>
+
+  <div class="section-title">ご相談内容</div>
+  <textarea id="question" placeholder="恋愛・仕事・金運・相性など、ご相談内容を入力してください"></textarea>
+
+  <div class="button-row">
+    <button class="primary" onclick="generateReading(false)">無料版を見る</button>
+    <button class="locked" onclick="showPremiumLock()">有料版を見る</button>
+    <button class="secondary" onclick="unlockPremiumDemo()">有料版デモ解放</button>
+    <button class="secondary" onclick="copyText()">鑑定書コピー</button>
+  </div>
+
+  <div class="button-row">
+    <button class="secondary" onclick="saveHistory()">履歴保存</button>
+    <button class="secondary" onclick="loadLatestHistory()">最新履歴</button>
+    <button class="secondary" onclick="clearHistory()">履歴削除</button>
+    <button class="secondary" onclick="resetForm()">入力クリア</button>
+  </div>
+
+  <a class="insta-btn" href="https://www.instagram.com/moahetonghuishe" target="_blank" rel="noopener noreferrer">
+    詳細鑑定・お申し込みはこちら（Instagram）
+  </a>
+
+  <div class="note">有料版は、説明文ではなく“物語のように語る鑑定結果”を出す構成です。実際の決済は未接続ですが、ロック表示と解放導線までは入っています。</div>
+
+  <div id="lockBanner" class="banner hidden"></div>
+
+  <div id="plainResult" class="hidden"></div>
+
+  <div id="reportView" class="report-wrap hidden">
+    <div class="report-card">
+      <div class="report-title">無料版プレビュー</div>
+      <div id="reportPreview" class="report-text"></div>
+    </div>
+    <div class="report-card">
+      <div class="report-title">西洋占術の詳細</div>
+      <div id="reportDetail" class="report-text"></div>
+    </div>
+    <div class="report-card">
+      <div class="report-title">有料版 物語鑑定</div>
+      <div id="reportStory" class="report-text"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentMode = "general";
+let premiumUnlocked = false;
+
+const tarotCards = [
+  ["愚者","新しい旅の始まり。自由と可能性が広がる。"],
+  ["魔術師","現実化の力。意志を形にする段階。"],
+  ["女教皇","直感と沈黙。まだ表に出ていない真実。"],
+  ["女帝","豊かさ、愛情、育む力。"],
+  ["皇帝","現実的な決断、秩序、基盤作り。"],
+  ["恋人","選択、関係性、結びつき。"],
+  ["戦車","前進、突破、意志の強さ。"],
+  ["力","優しさで乗り越える力。"],
+  ["隠者","内省、学び、ひとりの時間。"],
+  ["運命の輪","流れが変わる転機。"],
+  ["星","希望、癒し、未来への光。"],
+  ["月","不安、揺らぎ、見えていない本心。"],
+  ["太陽","成功、明るさ、開花。"]
+];
+
+const lenormandCards = [
+  ["騎士","知らせ、進展、動き。"],
+  ["クローバー","小さな幸運、好機。"],
+  ["船","移動、距離、変化。"],
+  ["家","安心、居場所、基盤。"],
+  ["木","成長、健康、時間。"],
+  ["雲","曖昧さ、不安定。"],
+  ["蛇","複雑さ、嫉妬、遠回り。"],
+  ["指輪","契約、約束、関係の固定化。"],
+  ["鍵","答え、重要な突破口。"],
+  ["ハート","愛情、恋心、感情。"]
+];
+
+const runes = [
+  ["フェオ","豊かさは、整えた土台に流れ込む。"],
+  ["ウルズ","内側の力を信じる時。"],
+  ["ソウェイル","光はすでに差し込んでいる。"],
+  ["ラグズ","流れに逆らわず直感を信じる。"],
+  ["ゲボ","与えることと受け取ることの循環。"],
+  ["アンスズ","言葉や知らせに重要な意味がある。"],
+  ["ベルカナ","育みと再生。"],
+  ["ティール","正しい勇気が道をひらく。"]
+];
+
+function setMode(mode, el){
+  currentMode = mode;
+  document.querySelectorAll('.mode-card').forEach(card => card.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function rand(arr, seedText){
+  let n = 0;
+  for(let i=0;i<seedText.length;i++) n += seedText.charCodeAt(i);
+  return arr[n % arr.length];
+}
+
+function getLifePath(dateStr){
+  const digits = dateStr.replaceAll('-', '').split('').map(Number);
+  let sum = digits.reduce((a,b)=>a+b,0);
+  while(sum > 9 && ![11,22,33].includes(sum)){
+    sum = String(sum).split('').map(Number).reduce((a,b)=>a+b,0);
+  }
+  return sum;
+}
+
+function getSunSign(m,d){
+  const signs = [
+    ["山羊座",1,19],["水瓶座",2,18],["魚座",3,20],["牡羊座",4,19],["牡牛座",5,20],["双子座",6,21],
+    ["蟹座",7,22],["獅子座",8,22],["乙女座",9,22],["天秤座",10,23],["蠍座",11,22],["射手座",12,21],["山羊座",12,31]
+  ];
+  for(const [name, mm, dd] of signs){
+    if(m < mm || (m === mm && d <= dd)) return name;
+  }
+  return "山羊座";
+}
+
+function getMoonSign(m){
+  const moonCycle = ["月の牡羊座","月の牡牛座","月の双子座","月の蟹座","月の獅子座","月の乙女座","月の天秤座","月の蠍座","月の射手座","月の山羊座","月の水瓶座","月の魚座"];
+  return moonCycle[(m * 3) % 12];
+}
+
+function getAscSign(hour){
+  const asc = ["牡羊座","牡牛座","双子座","蟹座","獅子座","乙女座","天秤座","蠍座","射手座","山羊座","水瓶座","魚座"];
+  return asc[Math.floor(((hour || 12) % 24) / 2) % 12];
+}
+
+function getModeLabel(){
+  return {
+    general:"総合",
+    love:"恋愛",
+    work:"仕事",
+    money:"金運"
+  }[currentMode] || "総合";
+}
+
+function modeAdvice(mode){
+  const map = {
+    general:"人生全体の流れを広く見ながら、今の位置と次の転機を重ねて読みます。",
+    love:"気持ちの温度差、距離感、今後の関係の育ち方を中心に読みます。",
+    work:"今いる場所で伸びるのか、環境を変えるべきか、タイミングを重ねて読みます。",
+    money:"お金の流れ、守り方、増やし方、無駄を減らすべき時期を見ます。"
+  };
+  return map[mode] || map.general;
+}
+
+function getNumerologyText(num){
+  const map = {
+    1:"自ら道を切り開く力が強く、人生のテーマは“自立と開拓”です。",
+    2:"人との関係の中で価値を育てる力が強く、人生のテーマは“調和”です。",
+    3:"表現と感性が強みで、言葉や創造性が運命を動かします。",
+    4:"現実を整え基盤を築く力に優れています。",
+    5:"変化の中で生きるほど、本来の力が出やすい数です。",
+    6:"愛と責任感が強く、人を支える役割を担いやすい数です。",
+    7:"探究心と洞察力に優れ、表面ではなく本質を見る人です。",
+    8:"結果を現実化する力が強く、実務性や達成力に優れます。",
+    9:"広い視点で人や社会に関わるほど運が伸びる数です。",
+    11:"感受性と霊的直感が高く、導き手の性質があります。",
+    22:"理想を大きな形にする建設力があります。",
+    33:"深い愛と包容力で周囲を癒す数です。"
+  };
+  return map[num] || "静かに積み重ねることで力が育つ数です。";
+}
+
+function buildPerson(name, birth, birthTime){
+  const [y,m,d] = birth.split("-").map(Number);
+  const hour = birthTime ? Number(birthTime.split(":")[0]) : 12;
+  return {
+    name,
+    y,m,d,hour,
+    sun:getSunSign(m,d),
+    moon:getMoonSign(m),
+    asc:getAscSign(hour),
+    lifePath:getLifePath(birth)
+  };
+}
+
+function getTarot(seed){
+  return rand(tarotCards, seed);
+}
+
+function getLenormand(seed){
+  return rand(lenormandCards, seed + "len");
+}
+
+function getRune(seed){
+  return rand(runes, seed + "rune");
+}
+
+function getCompatibility(person, partner){
+  let score = 0;
+  let text = [];
+  if(person.sun === partner.sun){
+    score += 35;
+    text.push("太陽星座が同じため、根本的な感覚や価値観が通じやすい相性です。");
+  } else {
+    text.push("太陽星座が異なるため、違いを理解すると補い合いやすい関係です。");
+  }
+  if(person.lifePath === partner.lifePath){
+    score += 30;
+    text.push("数秘のライフパスが同じため、人生テーマが似ています。");
+  }
+  if(person.moon === partner.moon){
+    score += 25;
+    text.push("月の性質が近く、感情面で理解し合いやすいです。");
+  }
+  const label = score >= 70 ? "非常に相性が良い" : score >= 40 ? "学び合える良い相性" : "努力で深まる相性";
+  return `${partner.name}様との相性判定：${label}
+
+${text.join("\n")}`;
+}
+
+function createStory(person, question, mode, tarot, lenormand, rune, compatibilityText){
+  const opening = `${person.name}様の物語は、静かな夜空にひとつの星が灯るように始まります。
+
+太陽は${person.sun}にあり、月は${person.moon}を渡り、地平線には${person.asc}が昇っています。
+その配置は、外から見える印象と、内側で大切に抱えている想いが、必ずしも同じではないことを教えています。`;
+
+  const numerology = `生年月日が導く数秘では ${person.lifePath} が現れました。
+${getNumerologyText(person.lifePath)}
+
+だからこそ、${person.name}様の人生は、ただ流されるだけではなく、
+見えないところで何度も自分の本心と向き合いながら、少しずつ本来の道へ戻っていく物語なのです。`;
+
+  const current = `今、タロットには「${tarot[0]}」が現れました。
+それは「${tarot[1]}」という意味を持ちます。
+
+ルノルマンには「${lenormand[0]}」。
+そこには「${lenormand[1]}」という現実の気配があります。
+
+そしてルーンは「${rune[0]}」を示しました。
+この印は、「${rune[1]}」と静かに語りかけています。`;
+
+  const modeText = {
+    general:`いまのテーマは、人生全体の流れを整えることです。
+焦って未来を決めるよりも、いま自分の足元に何があるかを丁寧に見つめ直すことで、次の扉は自然に開いていきます。`,
+    love:`恋愛では、感情の勢いよりも“関係の呼吸”を読むことが大切です。
+近づくべき時と、あえて静かに見守るべき時。その見極めが、未来の形を大きく変えていきます。`,
+    work:`仕事では、動くことそのものより“いつ動くか”が重要です。
+今は実力や経験が見えないところで蓄えられており、整った瞬間に大きく評価へつながりやすい流れです。`,
+    money:`金運では、増やす前に流れを整えることが鍵です。
+失うものを減らし、乱れた流れを正すほど、後から入ってくる力が強くなります。`
+  }[mode] || "";
+
+  const questionText = question
+    ? `いま抱えている「${question}」という問いは、偶然ここに現れたわけではありません。
+その問い自体が、すでに変化の入口です。
+今すぐ結論を出す必要はありませんが、見て見ぬふりをしないことが運をひらく第一歩になります。`
+    : `まだ言葉になっていない想いも、すでに運命の流れの中では意味を持ちはじめています。
+焦って名前をつけなくても、心が何に反応しているのかを見つめることで、次の道は見えやすくなります。`;
+
+  const relation = compatibilityText && !compatibilityText.includes("未入力")
+    ? `相性の流れを見ると、${compatibilityText}
+このご縁は、ただ楽なだけではなく、互いの内面を映し出す鏡のような側面も持っています。`
+    : `いまはまず、ご自身の物語を整えることが先です。
+ご縁は、自分の流れが整った時ほど自然な形で近づいてきます。`;
+
+  const ending = `未来は、あらかじめ固定された結末ではありません。
+けれど、${person.name}様の空には、確かに“ここからひらいていく運命”の兆しがあります。
+
+今はまだ静かでも大丈夫です。
+星は見えないところでも動き続けています。
+そしてあなたの物語もまた、すでに次の章へ向かって動き始めています。`;
+
+  return [opening, numerology, current, modeText, questionText, relation, ending].join("\n\n");
+}
+
+function buildPreview(person, tarot, rune){
+  return `【無料版プレビュー】
+
+太陽星座：${person.sun}
+月星座：${person.moon}
+アセンダント：${person.asc}
+ライフパス：${person.lifePath}
+
+タロット：${tarot[0]}
+${tarot[1]}
+
+ルーン：${rune[0]}
+${rune[1]}
+
+この先は有料版で、5占術を統合した物語鑑定を表示します。`;
+}
+
+function buildDetail(person, tarot, lenormand, rune){
+  return `【西洋占星術】
+太陽：${person.sun}
+月：${person.moon}
+アセンダント：${person.asc}
+
+【数秘術】
+ライフパス：${person.lifePath}
+${getNumerologyText(person.lifePath)}
+
+【タロット】
+${tarot[0]}：${tarot[1]}
+
+【ルノルマン】
+${lenormand[0]}：${lenormand[1]}
+
+【ルーン】
+${rune[0]}：${rune[1]}
+
+【鑑定モード】
+${getModeLabel()}
+${modeAdvice(currentMode)}`;
+}
+
+function showPremiumLock(){
+  const banner = document.getElementById("lockBanner");
+  banner.classList.remove("hidden");
+  banner.innerText = `この先は有料版の本格鑑定です。
+
+・西洋占星術
+・タロット
+・ルノルマン
+・数秘術
+・ルーン
+
+を統合し、“物語のように語る鑑定結果”を表示します。
+実際の販売時はここに決済導線を入れてください。`;
+}
+
+function unlockPremiumDemo(){
+  premiumUnlocked = true;
+  document.getElementById("planLabel").innerText = "現在：有料版デモ解放中";
+  const banner = document.getElementById("lockBanner");
+  banner.classList.remove("hidden");
+  banner.innerText = "有料版デモを解放しました。次に鑑定すると、物語鑑定まで表示されます。";
+}
+
+function generateReading(forcePremium){
+  const name = document.getElementById("name").value.trim();
+  const birth = document.getElementById("birth").value;
+  const birthTime = document.getElementById("birthTime").value;
+  const partnerName = document.getElementById("partnerName").value.trim();
+  const partnerBirth = document.getElementById("partnerBirth").value;
+  const partnerBirthTime = document.getElementById("partnerBirthTime").value;
+  const question = document.getElementById("question").value.trim();
+
+  if(!name || !birth){
+    alert("お名前と生年月日を入力してください");
+    return;
+  }
+
+  const seed = name + birth + question + currentMode;
+  const person = buildPerson(name, birth, birthTime);
+  const tarot = getTarot(seed);
+  const lenormand = getLenormand(seed);
+  const rune = getRune(seed);
+
+  let compatibilityText = "お相手の情報が未入力です。";
+  if(partnerName && partnerBirth){
+    const partner = buildPerson(partnerName, partnerBirth, partnerBirthTime);
+    compatibilityText = getCompatibility(person, partner);
+  }
+
+  const preview = buildPreview(person, tarot, rune);
+  const detail = buildDetail(person, tarot, lenormand, rune);
+  const story = premiumUnlocked || forcePremium
+    ? createStory(person, question, currentMode, tarot, lenormand, rune, compatibilityText)
+    : "ここから先は有料版で表示される物語鑑定です。";
+
+  const fullText = `${preview}
+
+${detail}
+
+【相性】
+${compatibilityText}
+
+【有料版 物語鑑定】
+${story}`;
+
+  document.getElementById("plainResult").innerText = fullText;
+  document.getElementById("reportPreview").innerText = preview;
+  document.getElementById("reportDetail").innerText = `${detail}
+
+【相性】
+${compatibilityText}`;
+  document.getElementById("reportStory").innerText = story;
+  document.getElementById("reportView").classList.remove("hidden");
+
+  document.getElementById("planLabel").innerText = premiumUnlocked || forcePremium ? "現在：有料版デモ表示" : "現在：無料版プレビュー";
+  if(!(premiumUnlocked || forcePremium)) showPremiumLock();
+}
+
+function copyText(){
+  const text = document.getElementById("plainResult").innerText;
+  if(!text){
+    alert("先に鑑定してください");
+    return;
+  }
+  navigator.clipboard.writeText(text);
+  alert("コピーしました");
+}
+
+function saveHistory(){
+  const text = document.getElementById("plainResult").innerText;
+  if(!text){
+    alert("先に鑑定してください");
+    return;
+  }
+  const history = JSON.parse(localStorage.getItem("western_premium_history") || "[]");
+  history.unshift({
+    createdAt:new Date().toLocaleString("ja-JP"),
+    text
+  });
+  localStorage.setItem("western_premium_history", JSON.stringify(history.slice(0,20)));
+  alert("履歴を保存しました");
+}
+
+function loadLatestHistory(){
+  const history = JSON.parse(localStorage.getItem("western_premium_history") || "[]");
+  if(history.length === 0){
+    alert("履歴がありません");
+    return;
+  }
+  document.getElementById("plainResult").innerText = history[0].text;
+  document.getElementById("reportView").classList.remove("hidden");
+  document.getElementById("reportPreview").innerText = history[0].text;
+  document.getElementById("reportDetail").innerText = "";
+  document.getElementById("reportStory").innerText = "";
+}
+
+function clearHistory(){
+  localStorage.removeItem("western_premium_history");
+  alert("履歴を削除しました");
+}
+
+function resetForm(){
+  ["name","birth","birthTime","partnerName","partnerBirth","partnerBirthTime","question"].forEach(id=>{
+    document.getElementById(id).value = "";
+  });
+  document.getElementById("reportView").classList.add("hidden");
+  document.getElementById("plainResult").innerText = "";
+  document.getElementById("lockBanner").classList.add("hidden");
+}
+</script>
+</body>
+</html>
