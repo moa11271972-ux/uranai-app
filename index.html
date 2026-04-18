@@ -439,7 +439,308 @@ ${q ? `${q}` : "ご相談内容は未入力です。"}
 ${name}様の命式には、時間をかけてでも自分らしい答えへ到達できる力がしっかりと表れています。
 どうか焦らず、しかしご自身を見失わず、
 今の流れを丁寧に整えながら歩んでいってください。
+その積み重ねが、やがて大きな運の開花につながっていくでしょう。function getHexLine(){
+  const toss = () => (Math.random() < 0.5 ? 2 : 3);
+  const total = toss() + toss() + toss();
+  if(total === 6) return {value:0, changing:true, label:"老陰"};
+  if(total === 7) return {value:1, changing:false, label:"少陽"};
+  if(total === 8) return {value:0, changing:false, label:"少陰"};
+  return {value:1, changing:true, label:"老陽"};
+}
+
+function getTrigramName(bits){
+  const map = {
+    "111":"乾",
+    "110":"兌",
+    "101":"離",
+    "100":"震",
+    "011":"巽",
+    "010":"坎",
+    "001":"艮",
+    "000":"坤"
+  };
+  return map[bits] || "";
+}
+
+function renderYao(line){
+  return line.value === 1 ? "━━━━━━" : "━━  ━━";
+}
+
+function buildIChing(){
+  const lines = [];
+  for(let i=0;i<6;i++) lines.push(getHexLine());
+
+  const originalBits = lines.map(l => l.value);
+  const changedBits = lines.map(l => l.changing ? (l.value === 1 ? 0 : 1) : l.value);
+
+  const lower = originalBits.slice(0,3).reverse().join("");
+  const upper = originalBits.slice(3,6).reverse().join("");
+  const lowerChanged = changedBits.slice(0,3).reverse().join("");
+  const upperChanged = changedBits.slice(3,6).reverse().join("");
+
+  const originalName = `${getTrigramName(upper)}上${getTrigramName(lower)}下`;
+  const changedName = `${getTrigramName(upperChanged)}上${getTrigramName(lowerChanged)}下`;
+
+  const changingLines = lines
+    .map((l,i) => l.changing ? `${i+1}爻` : null)
+    .filter(Boolean);
+
+  return {
+    lines,
+    originalName,
+    changedName,
+    changingLines
+  };
+}
+
+function getCompatibility(person, partner, partnerName){
+  const dayElement1 = person.element;
+  const dayElement2 = partner.element;
+  const dayStem1 = person.dayStem;
+  const dayStem2 = partner.dayStem;
+
+  let score = 0;
+  let text = [];
+
+  if(dayElement1 === dayElement2){
+    score += 40;
+    text.push("同じ五行を持つため、根本的な感覚が通じやすい相性です。");
+  } else {
+    text.push("異なる五行を持つため、違いを理解することで補い合いやすい相性です。");
+  }
+
+  const goodPairs = [
+    ["木","火"],["火","土"],["土","金"],["金","水"],["水","木"]
+  ];
+
+  if(goodPairs.some(pair => pair[0] === dayElement1 && pair[1] === dayElement2) ||
+     goodPairs.some(pair => pair[0] === dayElement2 && pair[1] === dayElement1)){
+    score += 30;
+    text.push("五行の流れがつながりやすく、関係を育てやすい相です。");
+  }
+
+  if(dayStem1 === dayStem2){
+    score += 20;
+    text.push("日主が同じため、考え方や心の動きが似やすい関係です。");
+  }
+
+  let label = "努力で深まる相性";
+  if(score >= 70) label = "非常に相性が良い";
+  else if(score >= 40) label = "学び合える良い相性";
+
+  return `
+相手：${partnerName}
+相手の日柱：${partner.dayP}
+相手の日主：${partner.dayStem}（${partner.element}）
+判定：${label}
+
+${text.join("\n")}
+`;
+}
+
+function getCategoryAdvice(question, element){
+  if(!question){
+    return "現在は全体運として、焦らず流れを整えることが重要な時期です。";
+  }
+
+  if(question.includes("恋") || question.includes("愛") || question.includes("結婚")){
+    return `
+【恋愛運】
+現在の恋愛運は「流れを見極める時期」です。
+感情だけで動くよりも、相手との距離感やタイミングを大切にしてください。
+${element==="火"?"情熱が強く出やすいため、勢い任せの判断には注意が必要です。":""}
+${element==="水"?"相手の気持ちを読みすぎて疲れやすいので、自分の気持ちも大切にしてください。":""}
+今は焦って結論を出すよりも、関係を育てることが運気を高めます。`;
+  }
+
+  if(question.includes("仕事") || question.includes("転職") || question.includes("職")){
+    return `
+【仕事運】
+仕事運は「基盤を整える時期」です。
+大きく動くよりも、今の環境でできることを固めることで運が上がります。
+${element==="金"?"決断力が強く出る時ですが、急ぎすぎる判断には注意してください。":""}
+${element==="土"?"安定志向が強まるため、長期的視点で動くと成功しやすいです。":""}
+今は準備が未来の成功につながる重要なタイミングです。`;
+  }
+
+  if(question.includes("お金") || question.includes("金") || question.includes("収入")){
+    return `
+【金運】
+金運は「管理と見直しの時期」です。
+収入を増やすよりも、無駄を減らすことで運気が整います。
+${element==="土"?"堅実な運気があるため、貯蓄や長期運用に向いています。":""}
+${element==="火"?"衝動的な出費に注意が必要な時期です。":""}
+今は守りを固めることで、後に大きく伸びる運気です。`;
+  }
+
+  if(question.includes("人間関係") || question.includes("人")){
+    return `
+【人間関係運】
+人間関係は「整理と再構築の時期」です。
+無理に合わせるよりも、自然体でいられる関係を大切にしてください。
+今の時期に離れる縁は、必要な流れの一部です。
+新しい良縁のための準備でもあります。`;
+  }
+
+  return `
+【総合運】
+現在は大きく動くよりも「流れを整える」ことが最優先です。
+焦らず、自分のペースを守ることで運気が安定します。
+環境・気持ち・人間関係を整えることで、次の運が自然と開いてきます。`;
+}
+
+function buildReport(name, person, question, categoryText, daiun, nenun, monthly, compatibilityText, eki){
+  const dayStem = person.dayStem;
+  const element = person.element;
+
+  const tsYear = getTsuhen(dayStem, person.yearP[0]);
+  const tsMonth = getTsuhen(dayStem, person.monthP[0]);
+  const tsHour = getTsuhen(dayStem, person.hourP[0]);
+
+  const juYear = getJuniun(dayStem, person.yearP[1]);
+  const juMonth = getJuniun(dayStem, person.monthP[1]);
+  const juDay = getJuniun(dayStem, person.dayP[1]);
+  const juHour = getJuniun(dayStem, person.hourP[1]);
+
+  return `
+【命式】
+年柱：${person.yearP}（${tsYear}）
+月柱：${person.monthP}（${tsMonth}）
+日柱：${person.dayP}
+時柱：${person.hourP}（${tsHour}）
+
+【蔵干】
+年柱蔵干：${person.hidden.year.join("・")}
+月柱蔵干：${person.hidden.month.join("・")}
+日柱蔵干：${person.hidden.day.join("・")}
+時柱蔵干：${person.hidden.hour.join("・")}
+
+【十二運】
+年：${juYear}
+月：${juMonth}
+日：${juDay}
+時：${juHour}
+
+日主：${dayStem}（${element}）
+
+【大運】
+${daiun.join("\n")}
+
+【今年の運】
+${new Date().getFullYear()}年：${nenun}
+
+【流月】
+${monthly.join("\n")}
+
+【易】
+本卦：${eki.originalName}
+之卦：${eki.changedName}
+変爻：${eki.changingLines.length ? eki.changingLines.join("・") : "なし"}
+卦の形：
+${eki.lines.slice().reverse().map(line => `${renderYao(line)}　${line.label}`).join("\n")}
+
+【相性】
+${compatibilityText}
+
+【総合鑑定】
+${name}様の命式を丁寧に読み解くと、表面には穏やかさや柔らかさが見えやすい一方で、
+内面には簡単には揺るがない芯の強さと、人生をしっかり支えようとする力が宿っています。
+
+日主が「${dayStem}」であり、五行では「${element}」の性質を中心に運が動くため、
+物事に対する向き合い方にも、その性質が深く表れます。
+${element==="木" ? "木の気を持つ方は、成長・発展・前進の力が強く、止まるよりも伸びていくことで運が開きやすい傾向があります。" : ""}
+${element==="火" ? "火の気を持つ方は、情熱・表現・直感の力が強く、心が動く方向へ素直に進むことで運が活性化しやすい傾向があります。" : ""}
+${element==="土" ? "土の気を持つ方は、安定・信頼・継続の力が強く、足元を固めることで人生全体の運が整いやすい傾向があります。" : ""}
+${element==="金" ? "金の気を持つ方は、決断・整理・選別の力が強く、必要なものと不要なものを見極めることで運気が澄みやすい傾向があります。" : ""}
+${element==="水" ? "水の気を持つ方は、知性・柔軟性・洞察の力が強く、流れを読みながら動くことで自然と道が開いていきやすい傾向があります。" : ""}
+
+また、通変星と十二運の流れから見ると、
+単純に今の運だけでなく、社会の中でどう力を発揮し、どの場面で運が伸びやすいかも見えてきます。
+大運の流れは、人生を10年単位で眺めた時のテーマを示し、
+流年と流月は、その中で今どの位置にいるのかを教えてくれます。
+さらに易では、本卦と之卦が「今の状況」と「変化した先」を示しており、
+変爻がある時は、動きや転機が表れやすいサインになります。
+
+【相談内容】
+${question || "ご相談内容は未入力です。"}
+
+${categoryText}
+
+【最終メッセージ】
+運命は、決められた一本道ではありません。
+命式は確かに生まれ持った流れを示しますが、
+その流れをどう生かすかは、日々の選択と向き合い方によって変わっていきます。
+${name}様の命式には、時間をかけてでも自分らしい答えへ到達できる力がしっかりと表れています。
+どうか焦らず、しかしご自身を見失わず、
+今の流れを丁寧に整えながら歩んでいってください。
 その積み重ねが、やがて大きな運の開花につながっていくでしょう。
+`;
+}
+
+function uranai(){
+  const name = document.getElementById("name").value.trim();
+  const birth = document.getElementById("birth").value;
+  const birthTime = document.getElementById("birthTime").value;
+  const gender = document.getElementById("gender").value;
+  const partnerName = document.getElementById("partnerName").value.trim();
+  const partnerBirth = document.getElementById("partnerBirth").value;
+  const partnerBirthTime = document.getElementById("partnerBirthTime").value;
+  const question = document.getElementById("question").value.trim();
+
+  if(!name || !birth){
+    alert("お名前と生年月日を入力してください");
+    return;
+  }
+
+  const person = buildPerson(birth, birthTime, gender);
+  const daiun = getDaiun(person.monthP[0], person.monthP[1], person.yearP[0], gender, person.y);
+  const nenun = getYearPillarFull(new Date().getFullYear());
+  const monthly = getMonthlyFortunes();
+  const eki = buildIChing();
+  const categoryText = getCategoryAdvice(question, person.element);
+
+  let compatibilityText = "お相手の情報が未入力です。";
+  if(partnerName && partnerBirth){
+    const partner = buildPerson(partnerBirth, partnerBirthTime, "その他");
+    compatibilityText = getCompatibility(person, partner, partnerName);
+  }
+
+  const report = buildReport(name, person, question, categoryText, daiun, nenun, monthly, compatibilityText, eki);
+  document.getElementById("result").innerText = report;
+}
+
+function copyText(){
+  navigator.clipboard.writeText(document.getElementById("result").innerText);
+  alert("コピーしました");
+}
+
+function saveHistory(){
+  const text = document.getElementById("result").innerText;
+  if(!text){
+    alert("先に鑑定してください");
+    return;
+  }
+  const history = JSON.parse(localStorage.getItem("fortune_history") || "[]");
+  history.unshift({
+    createdAt: new Date().toLocaleString("ja-JP"),
+    text
+  });
+  localStorage.setItem("fortune_history", JSON.stringify(history.slice(0, 20)));
+  alert("履歴を保存しました");
+}
+
+function loadLatestHistory(){
+  const history = JSON.parse(localStorage.getItem("fortune_history") || "[]");
+  if(history.length === 0){
+    alert("履歴がありません");
+    return;
+  }
+  document.getElementById("result").innerText = history[0].text;
+}
+</script>
+
+</body>
+</html>
 
 
 `;
