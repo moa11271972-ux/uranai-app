@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>占い師専用ソフト 本格版</title>
-<style>
+
 <style>
 *{
   box-sizing:border-box;
@@ -105,15 +105,10 @@ button:hover{
   transform:translateY(-1px);
 }
 
-button:nth-of-type(1){
-  background:linear-gradient(135deg,#caa13a,#f3dc97);
-  color:#2b1b00;
-  box-shadow:0 10px 25px rgba(202,161,58,0.18);
-}
-
-button:nth-of-type(2),
-button:nth-of-type(3),
-button:nth-of-type(4){
+<button onclick="uranai()">本格鑑定を開始する</button>
+<button onclick="copyText()">鑑定書をコピーする</button>
+<button onclick="saveHistory()">鑑定履歴を保存する</button>
+<button onclick="loadLatestHistory()">最新の鑑定履歴を呼び出す</button>
   background:rgba(255,255,255,0.07);
   color:#fff5da;
   border:1px solid rgba(212,175,55,0.16);
